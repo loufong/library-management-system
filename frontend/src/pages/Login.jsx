@@ -45,8 +45,8 @@ const Login = () => {
           <div class="p-3 bg-indigo-600/20 border border-indigo-500/30 rounded-2xl mb-4 shadow-inner glow-indigo">
             <Library className="h-10 w-10 text-indigo-400" />
           </div>
-          <h2 class="text-3xl font-extrabold text-slate-100 tracking-tight">Welcome Back</h2>
-          <p class="text-sm text-slate-400 mt-2">Log in to manage books and view active loans</p>
+          <h2 class="text-3xl font-extrabold text-slate-100 tracking-tight">Library OS Login</h2>
+          <p class="text-sm text-slate-400 mt-2">Sign in to access your library account</p>
         </div>
 
         <div class="glass-card p-8 rounded-3xl shadow-2xl relative">
@@ -70,7 +70,7 @@ const Login = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   class="glass-input w-full pl-10 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-500/50"
-                  placeholder="Enter your username"
+                  placeholder="Enter Username"
                 />
               </div>
             </div>
@@ -87,7 +87,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   class="glass-input w-full pl-10 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-500/50"
-                  placeholder="••••••••"
+                  placeholder="Enter Password"
                 />
               </div>
             </div>
@@ -97,7 +97,7 @@ const Login = () => {
               disabled={loading}
               class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98] transition-all duration-150 disabled:opacity-50"
             >
-              {loading ? 'Logging in...' : 'Sign In'}
+              {loading ? 'Logging In...' : 'Log In'}
             </button>
           </form>
 
