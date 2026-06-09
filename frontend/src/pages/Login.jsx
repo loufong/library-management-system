@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
-import { Library, Lock, User, AlertCircle } from 'lucide-react';
+import { Library, Lock, Mail, AlertCircle } from 'lucide-react';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/auth/login', { username, password });
+      const response = await api.post('/auth/login', { email, password });
       const { token, username: resUser, email, role } = response.data;
 
       localStorage.setItem('token', token);
@@ -59,18 +59,18 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} class="space-y-6">
             <div>
-              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Username</label>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">
-                  <User className="h-5 w-5" />
+                  <Mail className="h-5 w-5" />
                 </span>
                 <input
-                  type="text"
+                  type="email"
                   required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   class="glass-input w-full pl-10 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-500/50"
-                  placeholder="Enter Username"
+                  placeholder="alice@example.com"
                 />
               </div>
             </div>
@@ -87,7 +87,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   class="glass-input w-full pl-10 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-500/50"
-                  placeholder="Enter Password"
+                  placeholder="••••••••"
                 />
               </div>
             </div>
