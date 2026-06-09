@@ -1,0 +1,71 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
+    branches:
+      - main
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Determine target environment
+      - name: Set Environment Variables
+        run: |
+          if [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
+            echo "ENV_NAME=production" >> $GITHUB_ENV
+            echo "KUBE_NAMESPACE=lms-prod" >> $GITHUB_ENV
+            echo "EKS_CLUSTER=lms-production-cluster" >> $GITHUB_ENV
+          else
+            echo "ENV_NAME=development" >> $GITHUB_ENV
+            echo "KUBE_NAMESPACE=lms-dev" >> $GITHUB_ENV
+            echo "EKS_CLUSTER=lms-dev-cluster" >> $GITHUB_ENV
+          fi
+
+      # Configure AWS credentials (simulated/required for EKS production deployment)
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # Update kubeconfig to point to target EKS Cluster
+      - name: Update Kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region us-east-1
+
+      # Apply Kubernetes Manifests
+      - name: Deploy to Kubernetes Cluster
+        run: |
+          # Create Namespace if not exists
+          kubectl apply -f kubernetes/namespace.yaml
+          
+          # Replace placeholder namespace in manifests if needed, or apply directly
+          kubectl apply -f kubernetes/secrets.yaml -n ${{ env.KUBE_NAMESPACE }}
+          kubectl apply -f kubernetes/configmap.yaml -n ${{ env.KUBE_NAMESPACE }}
+          kubectl apply -f kubernetes/mysql.yaml -n ${{ env.KUBE_NAMESPACE }}
+          
+          # Inject the built image tag or default to latest
+          kubectl apply -f kubernetes/backend.yaml -n ${{ env.KUBE_NAMESPACE }}
+          kubectl apply -f kubernetes/frontend.yaml -n ${{ env.KUBE_NAMESPACE }}
+          kubectl apply -f kubernetes/ingress.yaml -n ${{ env.KUBE_NAMESPACE }}
+          kubectl apply -f kubernetes/monitoring.yaml -n ${{ env.KUBE_NAMESPACE }}
+
+      # Verify Rolling Update Status
+      - name: Verify Rolling Update Deployments
+        run: |
+          echo "Verifying backend rollout status..."
+          kubectl rollout status deployment/backend-deployment -n ${{ env.KUBE_NAMESPACE }} --timeout=150s
+          
+          echo "Verifying frontend rollout status..."
+          kubectl rollout status deployment/frontend-deployment -n ${{ env.KUBE_NAMESPACE }} --timeout=150s
