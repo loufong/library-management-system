@@ -29,6 +29,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        registerRequest.setRole("MEMBER");
         User registeredUser = userService.registerUser(registerRequest);
         return ResponseEntity.ok(registeredUser);
     }

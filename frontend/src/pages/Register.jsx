@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
-import { Library, Lock, User, Mail, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Library, Lock, User, Mail, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -117,23 +117,6 @@ const Register = () => {
               </div>
             </div>
 
-            <div>
-              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">System Role</label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">
-                  <Shield className="h-5 w-5" />
-                </span>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl focus:ring-2 focus:ring-indigo-500/50 appearance-none bg-slate-900"
-                >
-                  <option value="MEMBER">Member</option>
-                  <option value="LIBRARIAN">Librarian</option>
-                  <option value="ADMIN">Administrator</option>
-                </select>
-              </div>
-            </div>
 
             <button
               type="submit"

@@ -196,22 +196,28 @@ const Members = () => {
                       {member.createdAt ? member.createdAt.split('T')[0] : 'N/A'}
                     </td>
                     <td class="py-4 px-6 flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => handleOpenEditModal(member)}
-                        class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-1.5 px-3 rounded-lg text-xs border border-slate-700 hover:border-slate-600 transition-colors flex items-center gap-1"
-                      >
-                        <Edit2 className="h-3.5 w-3.5" />
-                        <span>Edit</span>
-                      </button>
-                      
-                      <button
-                        onClick={() => handleDeleteMember(member.id, member.username)}
-                        disabled={member.username === currentUser.username}
-                        class="bg-red-950/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/20 hover:border-transparent p-1.5 rounded-lg transition-colors disabled:opacity-30 disabled:hover:bg-red-950/20 disabled:hover:text-red-400 disabled:hover:border-red-500/20"
-                        title="Delete Member Account"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
+                      {currentUser.role === 'ADMIN' || (currentUser.role === 'LIBRARIAN' && member.role === 'MEMBER') ? (
+                        <>
+                          <button
+                            onClick={() => handleOpenEditModal(member)}
+                            class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-1.5 px-3 rounded-lg text-xs border border-slate-700 hover:border-slate-600 transition-colors flex items-center gap-1"
+                          >
+                            <Edit2 className="h-3.5 w-3.5" />
+                            <span>Edit</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => handleDeleteMember(member.id, member.username)}
+                            disabled={member.username === currentUser.username}
+                            class="bg-red-950/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/20 hover:border-transparent p-1.5 rounded-lg transition-colors disabled:opacity-30 disabled:hover:bg-red-950/20 disabled:hover:text-red-400 disabled:hover:border-red-500/20"
+                            title="Delete Member Account"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </>
+                      ) : (
+                        <span class="text-xs text-slate-500 italic font-mono uppercase tracking-wider">Read-Only</span>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -273,16 +279,26 @@ const Members = () => {
 
               <div>
                 <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Role Permissions</label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleFormChange}
-                  class="glass-input w-full px-4 py-2.5 rounded-xl appearance-none bg-slate-900"
-                >
-                  <option value="MEMBER">Member</option>
-                  <option value="LIBRARIAN">Librarian</option>
-                  <option value="ADMIN">Administrator</option>
-                </select>
+                {currentUser.role === 'ADMIN' ? (
+                  <select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleFormChange}
+                    class="glass-input w-full px-4 py-2.5 rounded-xl appearance-none bg-slate-900"
+                  >
+                    <option value="MEMBER">Member</option>
+                    <option value="LIBRARIAN">Librarian</option>
+                    <option value="ADMIN">Administrator</option>
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    name="role"
+                    readOnly
+                    value="MEMBER"
+                    class="glass-input w-full px-4 py-2.5 rounded-xl bg-slate-900/50 text-slate-400 cursor-not-allowed border border-slate-800"
+                  />
+                )}
               </div>
 
               <div class="flex gap-4 pt-4">
