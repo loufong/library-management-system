@@ -1,7 +1,27 @@
 import axios from 'axios';
 
-// Dynamically check base URL. Use env variable or fallback to standard localhost API port
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+// Dynamically determine the base URL to support both local development and external/production deployment.
+// If the app is run locally in dev mode (usually on port 5173), we default to the local backend port 8080.
+// If the app is deployed (served via Nginx on port 80/443 or custom domains), we use the relative path '/api'
+// so that requests are routed via the reverse proxy/ingress of the host serving the application.
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  if (typeof window !== 'undefined' && window.location) {
+    // If the frontend is served on the Vite local dev server (default port 5173), point to local backend
+    if (window.location.port === '5173') {
+      return 'http://localhost:8080/api';
+    }
+    // Otherwise, use relative path '/api' on the current host (works for Docker Compose, K8s Ingress, etc.)
+    return '/api';
+  }
+  
+  return 'http://localhost:8080/api';
+};
+
+const API_BASE_URL = getBaseUrl();
 
 // Detect if we should use the localStorage mock adapter (e.g. running on GitHub Pages)
 const isGitHubPages = window.location.hostname.endsWith('github.io');
