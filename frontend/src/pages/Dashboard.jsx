@@ -1,3 +1,4 @@
+// Dashboard.jsx - Render library metrics, navigation, and system status
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
