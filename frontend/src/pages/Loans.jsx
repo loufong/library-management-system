@@ -347,7 +347,7 @@ const Loans = () => {
                 </div>
                 <div class="flex items-center gap-3">
                   <a 
-                    href={readerBook.fileUrl} 
+                    href={readerBook.fileUrl || readerBook.fileContent} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     class="px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors"
@@ -366,7 +366,7 @@ const Loans = () => {
               {/* PDF Frame */}
               <div class="flex-1 bg-slate-900 p-2 h-full">
                 <iframe 
-                  src={readerBook.fileUrl} 
+                  src={readerBook.fileUrl || readerBook.fileContent} 
                   className="w-full h-full rounded-2xl border-0 bg-slate-900" 
                   title={readerBook.title}
                 />

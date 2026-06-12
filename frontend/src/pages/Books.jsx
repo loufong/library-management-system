@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Search, Plus, Edit2, Trash2, BookOpen, AlertCircle, CheckCircle, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, BookOpen, AlertCircle, CheckCircle, ChevronLeft, ChevronRight, X, Upload } from 'lucide-react';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -180,6 +180,40 @@ const Books = () => {
       console.error(err);
       setError(err.response?.data?.message || 'Failed to borrow book. Check copy availability.');
     }
+  };
+
+  const handlePdfUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Please select a valid PDF file.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setFormData(prev => ({
+        ...prev,
+        fileContent: event.target.result,
+        fileUrl: '' // Clear link URL to indicate uploaded file
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleTxtUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setFormData(prev => ({
+        ...prev,
+        fileContent: event.target.result
+      }));
+    };
+    reader.readAsText(file);
   };
 
   return (
@@ -456,34 +490,79 @@ const Books = () => {
               </div>
 
               {formData.fileType === 'PDF' && (
-                <div>
-                  <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">PDF Document Link URL</label>
-                  <input
-                    type="url"
-                    name="fileUrl"
-                    required
-                    value={formData.fileUrl}
-                    onChange={handleFormChange}
-                    class="glass-input w-full px-4 py-2.5 rounded-xl"
-                    placeholder="https://example.com/ebook.pdf"
-                  />
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">PDF Document Link URL</label>
+                    <input
+                      type="url"
+                      name="fileUrl"
+                      required={!formData.fileContent}
+                      value={formData.fileUrl}
+                      onChange={handleFormChange}
+                      class="glass-input w-full px-4 py-2.5 rounded-xl"
+                      placeholder="https://example.com/ebook.pdf"
+                    />
+                  </div>
+                  <div class="relative">
+                    <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">OR Upload PDF File (.pdf)</span>
+                    <div class="flex items-center justify-center border-2 border-dashed border-slate-800 hover:border-indigo-500/50 rounded-xl p-4 transition-all bg-[#0a0f1d]/50 group relative">
+                      <input 
+                        type="file" 
+                        accept=".pdf" 
+                        onChange={handlePdfUpload} 
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      <div class="text-center">
+                        <Upload className="h-6 w-6 text-slate-500 group-hover:text-indigo-400 mx-auto mb-1.5 transition-colors" />
+                        <span class="text-xs font-semibold text-slate-400 group-hover:text-slate-200 block transition-colors">
+                          {formData.fileContent && formData.fileContent.startsWith('data:application/pdf') 
+                            ? 'PDF File Uploaded Successfully!' 
+                            : 'Upload PDF File'}
+                        </span>
+                        {formData.fileContent && formData.fileContent.startsWith('data:application/pdf') && (
+                          <span class="text-[10px] text-emerald-400 mt-1 block font-mono">
+                            Size: {Math.round(formData.fileContent.length * 0.75 / 1024)} KB
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
               {formData.fileType === 'TEXT' && (
-                <div>
-                  <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                    Book Content Pages (Separate pages with <code>---PAGE---</code>)
-                  </label>
-                  <textarea
-                    name="fileContent"
-                    rows="5"
-                    required
-                    value={formData.fileContent}
-                    onChange={handleFormChange}
-                    class="glass-input w-full px-4 py-2.5 rounded-xl font-mono text-sm"
-                    placeholder="Chapter 1 content...&#10;---PAGE---&#10;Chapter 2 content..."
-                  ></textarea>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                      Book Content Pages (Separate pages with <code>---PAGE---</code>)
+                    </label>
+                    <textarea
+                      name="fileContent"
+                      rows="5"
+                      required
+                      value={formData.fileContent}
+                      onChange={handleFormChange}
+                      class="glass-input w-full px-4 py-2.5 rounded-xl font-mono text-sm"
+                      placeholder="Chapter 1 content...&#10;---PAGE---&#10;Chapter 2 content..."
+                    ></textarea>
+                  </div>
+                  <div class="relative">
+                    <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">OR Upload Text File (.txt)</span>
+                    <div class="flex items-center justify-center border-2 border-dashed border-slate-800 hover:border-indigo-500/50 rounded-xl p-4 transition-all bg-[#0a0f1d]/50 group relative">
+                      <input 
+                        type="file" 
+                        accept=".txt" 
+                        onChange={handleTxtUpload} 
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      <div class="text-center">
+                        <Upload className="h-6 w-6 text-slate-500 group-hover:text-indigo-400 mx-auto mb-1.5 transition-colors" />
+                        <span class="text-xs font-semibold text-slate-400 group-hover:text-slate-200 block transition-colors">
+                          Upload Text File (.txt)
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -652,7 +731,7 @@ const Books = () => {
                 </div>
                 <div class="flex items-center gap-3">
                   <a 
-                    href={readerBook.fileUrl} 
+                    href={readerBook.fileUrl || readerBook.fileContent} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     class="px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors"
@@ -671,7 +750,7 @@ const Books = () => {
               {/* PDF Frame */}
               <div class="flex-1 bg-slate-900 p-2 h-full">
                 <iframe 
-                  src={readerBook.fileUrl} 
+                  src={readerBook.fileUrl || readerBook.fileContent} 
                   className="w-full h-full rounded-2xl border-0 bg-slate-900" 
                   title={readerBook.title}
                 />
