@@ -323,6 +323,27 @@ const mockAdapter = (config) => {
                 (b.genre && b.genre.toLowerCase().includes(q))
               );
             }
+            
+            const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (localUser.role === 'MEMBER') {
+              const loans = getMockLoans();
+              const activeLoanBookIds = new Set(
+                loans
+                  .filter(l => l.username === localUser.username && l.status !== 'RETURNED')
+                  .map(l => l.bookId)
+              );
+              result = result.map(b => {
+                if (!activeLoanBookIds.has(b.id)) {
+                  return {
+                    ...b,
+                    fileUrl: '',
+                    fileContent: ''
+                  };
+                }
+                return b;
+              });
+            }
+            
             return resolve(mockResponse(200, result, config));
           }
 
