@@ -53,12 +53,68 @@ const saveMockUsers = (users) => {
 
 const getMockBooks = () => {
   let books = localStorage.getItem('mock_books');
+  // Force reset if the old schema (missing fileType) is stored in localStorage
+  if (books && !books.includes('fileType')) {
+    books = null;
+  }
   if (!books) {
     const defaultBooks = [
-      { id: 'b1', title: 'Clean Code', author: 'Robert C. Martin', isbn: '9780132350884', publisher: 'Prentice Hall', publishedYear: 2008, genre: 'Technology', totalCopies: 5, availableCopies: 5 },
-      { id: 'b2', title: 'The Hobbit', author: 'J.R.R. Tolkien', isbn: '9780007487289', publisher: 'George Allen & Unwin', publishedYear: 1937, genre: 'Fantasy', totalCopies: 3, availableCopies: 3 },
-      { id: 'b3', title: 'Introduction to Algorithms', author: 'Thomas H. Cormen', isbn: '9780262033848', publisher: 'MIT Press', publishedYear: 2009, genre: 'Education', totalCopies: 2, availableCopies: 2 },
-      { id: 'b4', title: 'Design Patterns', author: 'Erich Gamma', isbn: '9780201633610', publisher: 'Addison-Wesley', publishedYear: 1994, genre: 'Technology', totalCopies: 4, availableCopies: 4 }
+      { 
+        id: 'b1', 
+        title: 'Clean Code', 
+        author: 'Robert C. Martin', 
+        isbn: '9780132350884', 
+        publisher: 'Prentice Hall', 
+        publishedYear: 2008, 
+        genre: 'Technology', 
+        totalCopies: 5, 
+        availableCopies: 5,
+        fileType: 'TEXT',
+        fileUrl: '',
+        fileContent: 'Clean Code: Preface\n\nClean code is code that has been written by someone who cares. It is elegant, simple, and direct. In this book, we will explore methods for styling, structuring, and writing clean, maintainable software.\n\n---PAGE---\nClean Code: Chapter 1 - Meaningful Names\n\nUse intention-revealing names. The name of a variable, function, or class should answer all the big questions. It should tell you why it exists, what it does, and how it is used. If a name requires a comment, then the name does not reveal its intent.\n\n---PAGE---\nClean Code: Chapter 2 - Functions\n\nThe first rule of functions is that they should be small. The second rule of functions is that they should be smaller than that. Functions should do one thing. They should do it well. They should do it only.'
+      },
+      { 
+        id: 'b2', 
+        title: 'The Hobbit', 
+        author: 'J.R.R. Tolkien', 
+        isbn: '9780007487289', 
+        publisher: 'George Allen & Unwin', 
+        publishedYear: 1937, 
+        genre: 'Fantasy', 
+        totalCopies: 3, 
+        availableCopies: 3,
+        fileType: 'TEXT',
+        fileUrl: '',
+        fileContent: 'The Hobbit: Chapter 1 - An Unexpected Party\n\nIn a hole in the ground there lived a hobbit. Not a nasty, dirty, wet hole, filled with the ends of worms and an oozy smell, nor yet a dry, bare, sandy hole with nothing in it to sit down on or to eat: it was a hobbit-hole, and that means comfort.\n\n---PAGE---\nThe Hobbit: An Unexpected Party (Cont.)\n\nThe door opened on to a tube-shaped hall like a tunnel: a very comfortable tunnel without smoke, with panelled walls, and floors tiled and carpeted, provided with polished chairs, and lots and lots of pegs for hats and coats - the hobbit was fond of visitors.\n\n---PAGE---\nThe Hobbit: Chapter 2 - Roast Mutton\n\nBilbo Baggins was standing in the doorway after breakfast, feeling very happy and comfortable. Suddenly Gandalf came by, Gandalf! If you had only heard a quarter of what I have heard about him, you would be prepared for any sort of remarkable story.'
+      },
+      { 
+        id: 'b3', 
+        title: 'Introduction to Algorithms', 
+        author: 'Thomas H. Cormen', 
+        isbn: '9780262033848', 
+        publisher: 'MIT Press', 
+        publishedYear: 2009, 
+        genre: 'Education', 
+        totalCopies: 2, 
+        availableCopies: 2,
+        fileType: 'PDF',
+        fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileContent: ''
+      },
+      { 
+        id: 'b4', 
+        title: 'Design Patterns', 
+        author: 'Erich Gamma', 
+        isbn: '9780201633610', 
+        publisher: 'Addison-Wesley', 
+        publishedYear: 1994, 
+        genre: 'Technology', 
+        totalCopies: 4, 
+        availableCopies: 4,
+        fileType: 'TEXT',
+        fileUrl: '',
+        fileContent: 'Design Patterns: Introduction\n\nDesign patterns are typical solutions to common problems in software design. Each pattern is like a blueprint that you can customize to solve a particular design problem in your code.\n\n---PAGE---\nDesign Patterns: Creational - Singleton Pattern\n\nSingleton is a creational design pattern that lets you ensure that a class has only one instance, while providing a global access point to this instance. It is useful for sharing database connections or configuration managers.\n\n---PAGE---\nDesign Patterns: Behavioral - Observer Pattern\n\nObserver is a behavioral design pattern that lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they are observing.'
+      }
     ];
     localStorage.setItem('mock_books', JSON.stringify(defaultBooks));
     return defaultBooks;
@@ -272,7 +328,7 @@ const mockAdapter = (config) => {
 
           // POST /books
           if (method === 'POST') {
-            const { title, author, isbn, publisher, publishedYear, genre, totalCopies } = body;
+            const { title, author, isbn, publisher, publishedYear, genre, totalCopies, fileUrl, fileType, fileContent } = body;
             const newBook = {
               id: 'b_' + Date.now(),
               title,
@@ -282,7 +338,10 @@ const mockAdapter = (config) => {
               publishedYear: parseInt(publishedYear) || new Date().getFullYear(),
               genre,
               totalCopies: parseInt(totalCopies) || 1,
-              availableCopies: parseInt(totalCopies) || 1
+              availableCopies: parseInt(totalCopies) || 1,
+              fileUrl: fileUrl || '',
+              fileType: fileType || 'NONE',
+              fileContent: fileContent || ''
             };
             books.push(newBook);
             saveMockBooks(books);
@@ -295,7 +354,7 @@ const mockAdapter = (config) => {
             const idx = books.findIndex(b => b.id === id);
             if (idx === -1) return reject(mockError(404, 'Book not found.'));
             
-            const { title, author, isbn, publisher, publishedYear, genre, totalCopies } = body;
+            const { title, author, isbn, publisher, publishedYear, genre, totalCopies, fileUrl, fileType, fileContent } = body;
             const prevBook = books[idx];
             
             const totalDiff = totalCopies - prevBook.totalCopies;
@@ -311,7 +370,10 @@ const mockAdapter = (config) => {
               publishedYear: parseInt(publishedYear) || prevBook.publishedYear,
               genre,
               totalCopies: parseInt(totalCopies) || 1,
-              availableCopies: newAvailable
+              availableCopies: newAvailable,
+              fileUrl: fileUrl !== undefined ? fileUrl : prevBook.fileUrl,
+              fileType: fileType !== undefined ? fileType : prevBook.fileType,
+              fileContent: fileContent !== undefined ? fileContent : prevBook.fileContent
             };
             saveMockBooks(books);
             return resolve(mockResponse(200, books[idx], config));

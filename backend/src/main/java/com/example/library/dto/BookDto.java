@@ -27,6 +27,10 @@ public class BookDto {
 
     private Integer availableCopies;
 
+    private String fileUrl;
+    private String fileType = "NONE";
+    private String fileContent;
+
     public BookDto() {
     }
 
@@ -113,5 +117,29 @@ public class BookDto {
 
     public void setAvailableCopies(Integer availableCopies) {
         this.availableCopies = availableCopies;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFileContent() {
+        return fileContent;
+    }
+
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
     }
 }

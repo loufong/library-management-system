@@ -52,6 +52,10 @@ public class BookService {
                 bookDto.getTotalCopies() // Initially, all copies are available
         );
 
+        book.setFileUrl(bookDto.getFileUrl());
+        book.setFileType(bookDto.getFileType());
+        book.setFileContent(bookDto.getFileContent());
+
         return bookRepository.save(book);
     }
 
@@ -79,6 +83,10 @@ public class BookService {
         int diff = bookDto.getTotalCopies() - book.getTotalCopies();
         book.setTotalCopies(bookDto.getTotalCopies());
         book.setAvailableCopies(book.getAvailableCopies() + diff);
+
+        book.setFileUrl(bookDto.getFileUrl());
+        book.setFileType(bookDto.getFileType());
+        book.setFileContent(bookDto.getFileContent());
 
         return bookRepository.save(book);
     }

@@ -34,6 +34,16 @@ public class Book {
     @Column(name = "available_copies")
     private Integer availableCopies = 1;
 
+    @Column(name = "file_url", length = 500)
+    private String fileUrl;
+
+    @Column(name = "file_type", length = 50)
+    private String fileType = "NONE";
+
+    @Lob
+    @Column(name = "file_content", columnDefinition = "LONGTEXT")
+    private String fileContent;
+
     public Book() {
     }
 
@@ -119,5 +129,29 @@ public class Book {
 
     public void setAvailableCopies(Integer availableCopies) {
         this.availableCopies = availableCopies;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFileContent() {
+        return fileContent;
+    }
+
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
     }
 }

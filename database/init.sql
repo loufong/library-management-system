@@ -27,7 +27,10 @@ CREATE TABLE books (
     published_year INT,
     genre VARCHAR(50),
     total_copies INT DEFAULT 1,
-    available_copies INT DEFAULT 1
+    available_copies INT DEFAULT 1,
+    file_url VARCHAR(500),
+    file_type VARCHAR(50) DEFAULT 'NONE',
+    file_content LONGTEXT
 ) ENGINE=InnoDB;
 
 -- Create Loans table
