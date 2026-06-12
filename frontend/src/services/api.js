@@ -54,7 +54,7 @@ const saveMockUsers = (users) => {
 const getMockBooks = () => {
   let books = localStorage.getItem('mock_books');
   // Force reset if the old schema or new books are missing
-  if (books && (!books.includes('fileType') || !books.includes('b5') || !books.includes('b6'))) {
+  if (books && (!books.includes('fileType') || !books.includes('b5') || !books.includes('b6') || !books.includes('b7'))) {
     books = null;
   }
   if (!books) {
@@ -142,6 +142,20 @@ const getMockBooks = () => {
         fileType: 'TEXT',
         fileUrl: '',
         fileContent: 'Frankenstein: Chapter 1\n\nI am by birth a Genevese, and my family is one of the most distinguished of that republic. My ancestors had been for many years counsellors and syndics, and my father had filled several public situations with honour and reputation.\n\n---PAGE---\nFrankenstein: Chapter 2\n\nWe witnessed a most violent and terrible thunderstorm. It advanced from behind the mountains of Jura, and the thunder burst at once with frightful loudness from various quarters of the heaven. I remained watching its progress with curiosity and delight.'
+      },
+      {
+        id: 'b7',
+        title: 'Alice in Wonderland',
+        author: 'Lewis Carroll',
+        isbn: '9780199558292',
+        publisher: 'Oxford University Press',
+        publishedYear: 1865,
+        genre: 'Classic Fiction',
+        totalCopies: 5,
+        availableCopies: 5,
+        fileType: 'TEXT',
+        fileUrl: '',
+        fileContent: 'Alice\'s Adventures in Wonderland: Chapter 1 - Down the Rabbit-Hole\n\nAlice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, \'and what is the use of a book,\' thought Alice \'without pictures or conversations?\'\n\n---PAGE---\nAlice\'s Adventures in Wonderland: Down the Rabbit-Hole (Cont.)\n\nSo she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.'
       }
     ];
     localStorage.setItem('mock_books', JSON.stringify(defaultBooks));
