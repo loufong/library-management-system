@@ -229,8 +229,8 @@ const Members = () => {
 
       {/* Add/Edit Modal */}
       {isModalOpen && (
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-          <div class="glass-card w-full max-w-md rounded-3xl p-8 shadow-2xl relative border border-slate-800">
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 overflow-y-auto">
+          <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative border border-slate-800 my-auto">
             <h2 class="text-2xl font-extrabold text-slate-100 mb-6">
               {selectedMember ? 'Edit Member Account' : 'Register New Account'}
             </h2>

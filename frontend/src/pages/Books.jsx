@@ -185,7 +185,7 @@ const Books = () => {
       )}
 
       {/* Search Bar */}
-      <form onSubmit={handleSearchSubmit} class="flex gap-4 mb-8">
+      <form onSubmit={handleSearchSubmit} class="flex flex-col sm:flex-row gap-4 mb-8">
         <div class="relative flex-1">
           <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">
             <Search className="h-5 w-5" />
@@ -200,7 +200,7 @@ const Books = () => {
         </div>
         <button
           type="submit"
-          class="bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold px-6 rounded-xl border border-slate-700 transition-all duration-200"
+          class="bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold px-6 py-3 rounded-xl border border-slate-700 transition-all duration-200"
         >
           Search
         </button>
@@ -285,8 +285,8 @@ const Books = () => {
 
       {/* Add/Edit Modal */}
       {isModalOpen && (
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-          <div class="glass-card w-full max-w-lg rounded-3xl p-8 shadow-2xl relative border border-slate-800">
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 overflow-y-auto">
+          <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative border border-slate-800 my-auto">
             <h2 class="text-2xl font-extrabold text-slate-100 mb-6">
               {selectedBook ? 'Edit Book Catalog' : 'Add New Book'}
             </h2>
