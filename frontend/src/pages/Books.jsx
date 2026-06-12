@@ -148,14 +148,14 @@ const Books = () => {
   };
 
   return (
-    <div class="flex-1 p-8 max-w-7xl mx-auto w-full">
+    <div class="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 class="text-3xl font-extrabold text-slate-100 flex items-center gap-2">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-100 flex items-center gap-2">
             <BookOpen className="h-8 w-8 text-indigo-400" />
             <span>Books Catalog</span>
           </h1>
-          <p class="text-slate-400 mt-2">Browse catalog, search details and borrow books.</p>
+          <p class="text-sm sm:text-base text-slate-400 mt-2">Browse catalog, search details and borrow books.</p>
         </div>
 
         {isAdminOrLibrarian && (

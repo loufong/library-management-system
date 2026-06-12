@@ -61,26 +61,26 @@ const Dashboard = () => {
   }, [user.role]);
 
   const StatCard = ({ title, value, icon: Icon, colorClass, borderClass }) => (
-    <div className={`glass-card p-6 rounded-2xl border-l-4 ${borderClass} flex items-center justify-between`}>
+    <div className={`glass-card p-5 sm:p-6 rounded-xl sm:rounded-2xl border-l-4 ${borderClass} flex items-center justify-between`}>
       <div>
         <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">{title}</p>
-        <h3 class="text-3xl font-extrabold text-slate-100 mt-2">{value}</h3>
+        <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mt-2">{value}</h3>
       </div>
-      <div className={`p-3 rounded-xl ${colorClass}`}>
-        <Icon className="h-6 w-6 text-slate-100" />
+      <div className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl ${colorClass}`}>
+        <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-slate-100" />
       </div>
     </div>
   );
 
   return (
-    <div class="flex-1 p-8 max-w-7xl mx-auto w-full">
+    <div class="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full">
       {/* Header Banner */}
-      <div class="relative overflow-hidden glass-card p-8 rounded-3xl mb-8 border border-indigo-500/20 glow-indigo">
+      <div class="relative overflow-hidden glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl mb-6 sm:mb-8 border border-indigo-500/20 glow-indigo">
         <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-indigo-600/10 blur-3xl pointer-events-none"></div>
         <div class="relative z-10">
           <span class="px-3 py-1 text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-full">System Portal</span>
-          <h1 class="text-3xl font-extrabold text-slate-100 mt-4">Welcome back, {user.username}!</h1>
-          <p class="text-slate-400 mt-2 max-w-xl">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mt-4">Welcome back, {user.username}!</h1>
+          <p class="text-sm sm:text-base text-slate-400 mt-2 max-w-xl">
             {user.role === 'MEMBER' 
               ? 'Browse our extensive catalog, search for titles, and manage your current active borrowings.' 
               : 'Monitor active book loans, track overdue deadlines, and maintain the member database.'}
@@ -89,7 +89,7 @@ const Dashboard = () => {
       </div>
 
       {error && (
-        <div class="mb-8 p-4 bg-red-950/20 border border-red-500/30 text-red-200 rounded-2xl text-sm flex items-center gap-3">
+        <div class="mb-6 sm:mb-8 p-4 bg-red-950/20 border border-red-500/30 text-red-200 rounded-2xl text-sm flex items-center gap-3">
           <AlertTriangle className="h-5 w-5 text-red-400 shrink-0" />
           <span>{error}</span>
         </div>
@@ -102,7 +102,7 @@ const Dashboard = () => {
       ) : (
         <>
           {/* Stats Grid */}
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             <StatCard 
               title={user.role === 'MEMBER' ? "Total Catalog Copies" : "Total Catalog Books"}
               value={stats.totalBooks} 
@@ -145,7 +145,7 @@ const Dashboard = () => {
 
           {/* Quick Actions Grid */}
           <h2 class="text-xl font-bold text-slate-200 mb-4">Quick Navigation</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <Link to="/books" class="group glass-card p-6 rounded-2xl hover:border-indigo-500/50 hover:bg-slate-900/50 transition-all duration-300 flex flex-col justify-between h-40">
               <div>
                 <BookOpen className="h-8 w-8 text-indigo-400 mb-4" />

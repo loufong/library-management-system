@@ -125,19 +125,19 @@ const Members = () => {
   }
 
   return (
-    <div class="flex-1 p-8 max-w-7xl mx-auto w-full">
+    <div class="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 class="text-3xl font-extrabold text-slate-100 flex items-center gap-2">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-100 flex items-center gap-2">
             <Users className="h-8 w-8 text-indigo-400" />
             <span>Library Members Directory</span>
           </h1>
-          <p class="text-slate-400 mt-2">Manage library accounts, librarians, and admin credentials.</p>
+          <p class="text-sm sm:text-base text-slate-400 mt-2">Manage library accounts, librarians, and admin credentials.</p>
         </div>
 
         <button
           onClick={handleOpenAddModal}
-          class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-5 rounded-xl shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98] transition-all duration-150"
+          class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-5 rounded-xl shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98] transition-all duration-150 w-fit"
         >
           <Plus className="h-5 w-5" />
           <span>Add New Account</span>
@@ -164,24 +164,24 @@ const Members = () => {
           <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-indigo-500"></div>
         </div>
       ) : (
-        <div class="glass-card rounded-3xl overflow-hidden shadow-2xl border border-slate-800">
+        <div class="glass-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-800">
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="bg-slate-900/80 text-slate-400 border-b border-slate-800 text-xs font-semibold uppercase tracking-wider">
-                  <th class="py-4 px-6">Username</th>
-                  <th class="py-4 px-6">Email Address</th>
-                  <th class="py-4 px-6">System Role</th>
-                  <th class="py-4 px-6">Joined Date</th>
-                  <th class="py-4 px-6 text-center">Actions</th>
+                  <th class="py-3.5 px-4 sm:py-4 sm:px-6">Username</th>
+                  <th class="py-3.5 px-4 sm:py-4 sm:px-6">Email Address</th>
+                  <th class="py-3.5 px-4 sm:py-4 sm:px-6">System Role</th>
+                  <th class="py-3.5 px-4 sm:py-4 sm:px-6">Joined Date</th>
+                  <th class="py-3.5 px-4 sm:py-4 sm:px-6 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-800/50 text-sm text-slate-300">
                 {members.map((member) => (
                   <tr key={member.id} class="hover:bg-slate-900/30 transition-colors">
-                    <td class="py-4 px-6 font-semibold text-slate-100">{member.username}</td>
-                    <td class="py-4 px-6 font-mono text-xs">{member.email}</td>
-                    <td class="py-4 px-6">
+                    <td class="py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-100">{member.username}</td>
+                    <td class="py-3 px-4 sm:py-4 sm:px-6 font-mono text-xs">{member.email}</td>
+                    <td class="py-3 px-4 sm:py-4 sm:px-6">
                       <span class={`px-2 py-1 text-xs font-bold font-mono tracking-wider rounded border ${
                         member.role === 'ADMIN' 
                           ? 'bg-red-500/10 text-red-400 border-red-500/20' 
@@ -192,10 +192,10 @@ const Members = () => {
                         {member.role}
                       </span>
                     </td>
-                    <td class="py-4 px-6 font-mono text-xs text-slate-400">
+                    <td class="py-3 px-4 sm:py-4 sm:px-6 font-mono text-xs text-slate-400">
                       {member.createdAt ? member.createdAt.split('T')[0] : 'N/A'}
                     </td>
-                    <td class="py-4 px-6 flex items-center justify-center gap-2">
+                    <td class="py-3 px-4 sm:py-4 sm:px-6 flex items-center justify-center gap-2">
                       {currentUser.role === 'ADMIN' || (currentUser.role === 'LIBRARIAN' && member.role === 'MEMBER') ? (
                         <>
                           <button
