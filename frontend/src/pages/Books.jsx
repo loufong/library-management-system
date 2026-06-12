@@ -288,27 +288,22 @@ const Books = () => {
               <div class="mt-6 flex items-center justify-between gap-3">
                 {currentUser.role === 'MEMBER' ? (
                   <div class="flex gap-2 w-full">
-                    {!borrowedBookIds.has(book.id) ? (
-                      <button
-                        onClick={() => handleBorrowBook(book)}
-                        disabled={book.availableCopies <= 0}
-                        class="flex-1 bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/30 hover:border-transparent font-semibold py-2 px-4 rounded-xl transition-all duration-150 disabled:opacity-30 disabled:hover:bg-indigo-600/20 disabled:hover:text-indigo-300 disabled:hover:border-indigo-500/30 text-xs text-center"
-                      >
-                        {book.availableCopies > 0 ? 'Borrow Book' : 'Out of Stock'}
-                      </button>
-                    ) : (
+                    {borrowedBookIds.has(book.id) ? (
                       <span class="flex-1 px-4 py-2 bg-emerald-950/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-xs font-semibold flex items-center justify-center">
                         Borrowed
                       </span>
-                    )}
-                    {book.fileType && book.fileType !== 'NONE' && borrowedBookIds.has(book.id) && (
+                    ) : (
                       <button
-                        onClick={() => handleOpenReader(book)}
-                        class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-xl shadow-lg transition-all duration-150 flex items-center justify-center gap-1.5 text-xs flex-1"
-                        title="Read Digital E-Book"
+                        onClick={() => handleBorrowBook(book)}
+                        disabled={book.availableCopies <= 0 || borrowedBookIds.size > 0}
+                        class="flex-1 bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/30 hover:border-transparent font-semibold py-2 px-4 rounded-xl transition-all duration-150 disabled:opacity-30 disabled:hover:bg-indigo-600/20 disabled:hover:text-indigo-300 disabled:hover:border-indigo-500/30 text-xs text-center"
+                        title={borrowedBookIds.size > 0 ? "You must return your borrowed book before borrowing a new one" : ""}
                       >
-                        <BookOpen className="h-4 w-4" />
-                        <span>Read</span>
+                        {borrowedBookIds.size > 0 
+                          ? 'Return borrowed book first' 
+                          : book.availableCopies > 0 
+                            ? 'Borrow Book' 
+                            : 'Out of Stock'}
                       </button>
                     )}
                   </div>

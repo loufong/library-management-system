@@ -53,8 +53,8 @@ const saveMockUsers = (users) => {
 
 const getMockBooks = () => {
   let books = localStorage.getItem('mock_books');
-  // Force reset if the old schema (missing fileType) is stored in localStorage
-  if (books && !books.includes('fileType')) {
+  // Force reset if the old schema or new books are missing
+  if (books && (!books.includes('fileType') || !books.includes('b5') || !books.includes('b6'))) {
     books = null;
   }
   if (!books) {
@@ -114,6 +114,34 @@ const getMockBooks = () => {
         fileType: 'TEXT',
         fileUrl: '',
         fileContent: 'Design Patterns: Introduction\n\nDesign patterns are typical solutions to common problems in software design. Each pattern is like a blueprint that you can customize to solve a particular design problem in your code.\n\n---PAGE---\nDesign Patterns: Creational - Singleton Pattern\n\nSingleton is a creational design pattern that lets you ensure that a class has only one instance, while providing a global access point to this instance. It is useful for sharing database connections or configuration managers.\n\n---PAGE---\nDesign Patterns: Behavioral - Observer Pattern\n\nObserver is a behavioral design pattern that lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they are observing.'
+      },
+      {
+        id: 'b5',
+        title: 'The Pragmatic Programmer',
+        author: 'Andrew Hunt',
+        isbn: '9780135957059',
+        publisher: 'Addison-Wesley',
+        publishedYear: 1999,
+        genre: 'Technology',
+        totalCopies: 3,
+        availableCopies: 3,
+        fileType: 'TEXT',
+        fileUrl: '',
+        fileContent: 'The Pragmatic Programmer: Chapter 1 - Pragmatic Philosophy\n\nProvide options, don\'t make lame excuses. Don\'t say it can\'t be done; explain what can be done to salvage the situation. Be a catalyst for change. Participate in your project\'s architecture and design.\n\n---PAGE---\nThe Pragmatic Programmer: Chapter 2 - A Pragmatic Approach\n\nGood design is easier to change than bad design. Keep your code Orthogonal. Orthogonality means that changes in one part of the system do not affect others. Avoid duplication: DRY (Don\'t Repeat Yourself).'
+      },
+      {
+        id: 'b6',
+        title: 'Frankenstein',
+        author: 'Mary Shelley',
+        isbn: '9780141439471',
+        publisher: 'Penguin Classics',
+        publishedYear: 1818,
+        genre: 'Classic Fiction',
+        totalCopies: 4,
+        availableCopies: 4,
+        fileType: 'TEXT',
+        fileUrl: '',
+        fileContent: 'Frankenstein: Chapter 1\n\nI am by birth a Genevese, and my family is one of the most distinguished of that republic. My ancestors had been for many years counsellors and syndics, and my father had filled several public situations with honour and reputation.\n\n---PAGE---\nFrankenstein: Chapter 2\n\nWe witnessed a most violent and terrible thunderstorm. It advanced from behind the mountains of Jura, and the thunder burst at once with frightful loudness from various quarters of the heaven. I remained watching its progress with curiosity and delight.'
       }
     ];
     localStorage.setItem('mock_books', JSON.stringify(defaultBooks));
@@ -428,9 +456,9 @@ const mockAdapter = (config) => {
             const user = users.find(u => u.id === userId || u.username === userId);
             if (!user) return reject(mockError(404, 'User profile mismatch.'));
 
-            const activeLoan = loans.find(l => l.bookId === bookId && l.username === user.username && l.status !== 'RETURNED');
+            const activeLoan = loans.find(l => l.username === user.username && l.status !== 'RETURNED');
             if (activeLoan) {
-              return reject(mockError(400, 'You already have an active loan for this book.'));
+              return reject(mockError(400, 'You must return your currently borrowed book before borrowing a new one.'));
             }
 
             book.availableCopies -= 1;

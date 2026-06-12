@@ -58,11 +58,11 @@ public class LoanService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.getUserId()));
 
-        // Check if user has already borrowed this book and hasn't returned it yet
-        List<Loan> userLoans = loanRepository.findByUserIdAndStatus(user.getId(), "BORROWED");
+        // Check if user has any active loans (not returned yet)
+        List<Loan> userLoans = loanRepository.findByUserId(user.getId());
         for (Loan l : userLoans) {
-            if (l.getBook().getId().equals(book.getId())) {
-                throw new BadRequestException("You have already borrowed this book and have not returned it yet");
+            if (!"RETURNED".equals(l.getStatus())) {
+                throw new BadRequestException("You must return your currently borrowed book before borrowing a new one");
             }
         }
 
