@@ -41,10 +41,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
                 .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll() // Prometheus metrics endpoint
                 
                 // Books authorization
-                .requestMatchers(HttpMethod.GET, "/api/books/**").hasAnyRole("ADMIN", "LIBRARIAN", "MEMBER")
                 .requestMatchers("/api/books/**").hasAnyRole("ADMIN", "LIBRARIAN")
                 
                 // Members authorization
