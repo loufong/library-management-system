@@ -55,6 +55,8 @@ public class BookService {
         book.setFileUrl(bookDto.getFileUrl());
         book.setFileType(bookDto.getFileType());
         book.setFileContent(bookDto.getFileContent());
+        book.setCoverUrl(bookDto.getCoverUrl());
+        book.setDescription(bookDto.getDescription());
 
         return bookRepository.save(book);
     }
@@ -87,6 +89,8 @@ public class BookService {
         book.setFileUrl(bookDto.getFileUrl());
         book.setFileType(bookDto.getFileType());
         book.setFileContent(bookDto.getFileContent());
+        book.setCoverUrl(bookDto.getCoverUrl());
+        book.setDescription(bookDto.getDescription());
 
         return bookRepository.save(book);
     }

@@ -30,6 +30,8 @@ public class BookDto {
     private String fileUrl;
     private String fileType = "NONE";
     private String fileContent;
+    private String coverUrl;
+    private String description;
 
     public BookDto() {
     }
@@ -141,5 +143,21 @@ public class BookDto {
 
     public void setFileContent(String fileContent) {
         this.fileContent = fileContent;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -44,6 +44,12 @@ public class Book {
     @Column(name = "file_content", columnDefinition = "LONGTEXT")
     private String fileContent;
 
+    @Column(name = "cover_url", length = 500)
+    private String coverUrl;
+
+    @Column(name = "description", length = 1000)
+    private String description;
+
     public Book() {
     }
 
@@ -153,5 +159,21 @@ public class Book {
 
     public void setFileContent(String fileContent) {
         this.fileContent = fileContent;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -2,6 +2,68 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { Search, Plus, Edit2, Trash2, BookOpen, AlertCircle, CheckCircle, ChevronLeft, ChevronRight, X, Upload } from 'lucide-react';
 
+const BookCover = ({ book }) => {
+  const [imgError, setImgError] = React.useState(false);
+  
+  // Determine cover image URL (User URL or fallback to Open Library Cover API)
+  const coverUrl = book.coverUrl || (book.isbn ? `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg?default=false` : null);
+
+  // Genre-based gradients to make the fallback book covers look premium
+  const getGenreGradient = (genre) => {
+    const g = (genre || '').toLowerCase();
+    if (g.includes('tech') || g.includes('code') || g.includes('program')) return 'from-indigo-600 to-purple-800';
+    if (g.includes('classic') || g.includes('fiction')) return 'from-amber-600 to-red-800';
+    if (g.includes('fantasy')) return 'from-amber-600 to-orange-850';
+    if (g.includes('dystopian')) return 'from-rose-800 to-red-950';
+    if (g.includes('education') || g.includes('study')) return 'from-teal-600 to-blue-800';
+    return 'from-slate-700 to-slate-900';
+  };
+
+  if (coverUrl && !imgError) {
+    return (
+      <div class="relative w-full h-56 bg-slate-950/80 rounded-xl overflow-hidden flex items-center justify-center border border-slate-800/80 shadow-md group-hover:scale-[1.02] transition-transform duration-300">
+        <img 
+          src={coverUrl} 
+          alt={book.title} 
+          onError={() => setImgError(true)}
+          class="w-full h-full object-cover rounded-xl"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent opacity-70"></div>
+      </div>
+    );
+  }
+
+  // Visual Fallback 3D CSS cover
+  return (
+    <div class={`relative w-full h-56 rounded-xl p-4 flex flex-col justify-between shadow-2xl border-l-[6px] border-black/40 bg-gradient-to-br ${getGenreGradient(book.genre)} text-white overflow-hidden select-none group-hover:scale-[1.02] transition-transform duration-300`}>
+      <div class="absolute inset-0 bg-white/[0.03] pointer-events-none mix-blend-overlay"></div>
+      <div class="absolute right-0 top-0 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
+      
+      <div class="flex justify-between items-start">
+        <span class="text-[9px] font-bold tracking-widest uppercase bg-white/20 px-2 py-0.5 rounded backdrop-blur-xs font-mono">
+          {book.genre || 'General'}
+        </span>
+        <BookOpen className="h-4 w-4 text-white/60" />
+      </div>
+      
+      <div class="my-auto flex flex-col justify-center">
+        <h4 class="text-base font-extrabold tracking-tight leading-snug line-clamp-3 font-serif">
+          {book.title}
+        </h4>
+        <div class="w-8 h-0.5 bg-white/60 my-2 rounded"></div>
+        <p class="text-[11px] font-medium text-white/80 line-clamp-1">
+          {book.author}
+        </p>
+      </div>
+      
+      <div class="flex justify-between items-center text-[8px] font-mono text-white/50 border-t border-white/10 pt-2">
+        <span>ISBN {book.isbn || 'N/A'}</span>
+        <span>EDITION {book.publishedYear || 'N/A'}</span>
+      </div>
+    </div>
+  );
+};
+
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,6 +85,8 @@ const Books = () => {
     fileUrl: '',
     fileType: 'NONE',
     fileContent: '',
+    coverUrl: '',
+    description: '',
   });
 
   // E-Book Reader State
@@ -85,6 +149,8 @@ const Books = () => {
       fileUrl: '',
       fileType: 'NONE',
       fileContent: '',
+      coverUrl: '',
+      description: '',
     });
     setIsModalOpen(true);
   };
@@ -102,6 +168,8 @@ const Books = () => {
       fileUrl: book.fileUrl || '',
       fileType: book.fileType || 'NONE',
       fileContent: book.fileContent || '',
+      coverUrl: book.coverUrl || '',
+      description: book.description || '',
     });
     setIsModalOpen(true);
   };
@@ -291,30 +359,38 @@ const Books = () => {
       ) : (
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map((book) => (
-            <div key={book.id} class="glass-card p-6 rounded-2xl flex flex-col justify-between hover:border-slate-600/50 transition-all duration-300 relative overflow-hidden group">
+            <div key={book.id} class="glass-card p-5 rounded-2xl flex flex-col justify-between hover:border-indigo-500/30 hover:bg-slate-900/40 shadow-xl transition-all duration-300 hover:shadow-indigo-500/5 hover:-translate-y-1 relative overflow-hidden group">
               <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-indigo-500/5 group-hover:bg-indigo-500/10 blur-xl pointer-events-none transition-all duration-300"></div>
               
               <div>
-                <div class="flex items-start justify-between gap-2">
-                  <span class="px-2 py-0.5 text-[10px] font-bold bg-slate-800 text-indigo-300 rounded border border-indigo-500/20 uppercase tracking-wider font-mono">
-                    {book.genre || 'General'}
-                  </span>
-                  <span class="text-xs text-slate-400 font-mono">ISBN: {book.isbn}</span>
-                </div>
-
-                <h3 class="text-xl font-bold text-slate-100 mt-3 line-clamp-1 group-hover:text-indigo-300 transition-colors">{book.title}</h3>
-                <p class="text-sm text-slate-300 mt-1">by {book.author}</p>
+                <BookCover book={book} />
                 
-                <div class="mt-4 grid grid-cols-2 gap-4 border-t border-b border-slate-800 py-3 text-xs">
-                  <div>
-                    <span class="text-slate-400 block">Publisher</span>
-                    <span class="text-slate-200 font-medium">{book.publisher || 'N/A'} ({book.publishedYear || 'N/A'})</span>
-                  </div>
-                  <div>
-                    <span class="text-slate-400 block">Available Copies</span>
-                    <span class={`font-bold block text-sm ${book.availableCopies > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {book.availableCopies} / {book.totalCopies}
+                <div class="mt-4">
+                  <div class="flex items-start justify-between gap-2">
+                    <span class="px-2.5 py-0.5 text-[9px] font-bold bg-indigo-950/40 text-indigo-300 rounded-md border border-indigo-500/15 uppercase tracking-wider font-mono">
+                      {book.genre || 'General'}
                     </span>
+                    <span class="text-xs text-slate-500 font-mono">ISBN: {book.isbn}</span>
+                  </div>
+
+                  <h3 class="text-lg font-bold text-slate-100 mt-3 line-clamp-1 group-hover:text-indigo-400 transition-colors" title={book.title}>{book.title}</h3>
+                  <p class="text-xs text-slate-400 mt-1 font-medium">by {book.author}</p>
+                  
+                  <p class="text-xs text-slate-450 mt-2.5 leading-relaxed line-clamp-2 italic font-light bg-slate-950/20 p-2.5 rounded-lg border border-slate-900/50">
+                    {book.description || `An engaging ${book.genre || 'general'} book authored by ${book.author}, exploring fascinating themes.`}
+                  </p>
+                  
+                  <div class="mt-4 grid grid-cols-2 gap-4 border-t border-slate-800/80 pt-3.5 text-[11px]">
+                    <div>
+                      <span class="text-slate-500 block">Publisher</span>
+                      <span class="text-slate-300 font-medium line-clamp-1">{book.publisher || 'N/A'} ({book.publishedYear || 'N/A'})</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 block">Available Copies</span>
+                      <span class={`font-bold block text-xs ${book.availableCopies > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {book.availableCopies} / {book.totalCopies}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -487,6 +563,32 @@ const Books = () => {
                     <option value="PDF">PDF E-Book Link</option>
                   </select>
                 </div>
+              </div>
+
+              <div class="grid grid-cols-1 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Cover Image URL (Optional)</label>
+                  <input
+                    type="url"
+                    name="coverUrl"
+                    value={formData.coverUrl}
+                    onChange={handleFormChange}
+                    class="glass-input w-full px-4 py-2.5 rounded-xl text-sm"
+                    placeholder="https://example.com/cover.jpg (leaves empty for automatic Open Library cover)"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Description / Caption</label>
+                <textarea
+                  name="description"
+                  rows="3"
+                  value={formData.description}
+                  onChange={handleFormChange}
+                  class="glass-input w-full px-4 py-2.5 rounded-xl text-sm"
+                  placeholder="Enter a brief summary or caption for the book cover..."
+                ></textarea>
               </div>
 
               {formData.fileType === 'PDF' && (

@@ -2,6 +2,44 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { History, CheckCircle, AlertCircle, Calendar, ArrowRightLeft, BookOpen, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
+const LoanBookTitle = ({ loan, book }) => {
+  const [imgError, setImgError] = React.useState(false);
+  const coverUrl = book?.coverUrl || (loan.bookIsbn ? `https://covers.openlibrary.org/b/isbn/${loan.bookIsbn}-S.jpg?default=false` : null);
+
+  const getGenreColor = (genre) => {
+    const g = (genre || '').toLowerCase();
+    if (g.includes('tech') || g.includes('code') || g.includes('program')) return 'bg-indigo-600';
+    if (g.includes('classic') || g.includes('fiction')) return 'bg-amber-600';
+    if (g.includes('fantasy')) return 'bg-orange-600';
+    if (g.includes('dystopian')) return 'bg-red-700';
+    if (g.includes('education')) return 'bg-teal-600';
+    return 'bg-slate-700';
+  };
+
+  return (
+    <div class="flex items-center gap-3">
+      <div class="relative w-9 h-12 rounded bg-slate-950 flex items-center justify-center border border-slate-800 shadow shrink-0 overflow-hidden">
+        {coverUrl && !imgError ? (
+          <img 
+            src={coverUrl} 
+            alt={loan.bookTitle} 
+            onError={() => setImgError(true)} 
+            class="w-full h-full object-cover"
+          />
+        ) : (
+          <div class={`w-full h-full flex items-center justify-center text-[8px] font-bold text-white text-center leading-3 ${getGenreColor(book?.genre)}`}>
+            {loan.bookTitle ? loan.bookTitle.substring(0, 2).toUpperCase() : 'BK'}
+          </div>
+        )}
+      </div>
+      <div class="flex flex-col">
+        <span class="font-semibold text-slate-100 line-clamp-1">{loan.bookTitle}</span>
+        {book?.author && <span class="text-[10px] text-slate-400">by {book.author}</span>}
+      </div>
+    </div>
+  );
+};
+
 const Loans = () => {
   const [loans, setLoans] = useState([]);
   const [booksMap, setBooksMap] = useState({});
@@ -148,7 +186,9 @@ const Loans = () => {
               <tbody class="divide-y divide-slate-800/50 text-sm text-slate-300">
                 {loans.map((loan) => (
                   <tr key={loan.id} class="hover:bg-slate-900/30 transition-colors">
-                    <td class="py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-100">{loan.bookTitle}</td>
+                    <td class="py-3 px-4 sm:py-4 sm:px-6">
+                      <LoanBookTitle loan={loan} book={booksMap[loan.bookId]} />
+                    </td>
                     <td class="py-3 px-4 sm:py-4 sm:px-6 font-mono text-xs">{loan.bookIsbn}</td>
                     {currentUser.role !== 'MEMBER' && (
                       <td class="py-3 px-4 sm:py-4 sm:px-6 text-slate-200">
