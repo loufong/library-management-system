@@ -71,7 +71,7 @@ const Navbar = () => {
         {/* Profile Info and Logout (Desktop) */}
         <div class="hidden md:flex items-center gap-4">
           <div class="text-right">
-            <p class="text-sm font-semibold text-slate-200">{user.username}</p>
+            <p class="text-sm font-semibold text-slate-200">{user.fullName || user.username}</p>
             <p class="text-xs text-indigo-400 font-mono tracking-wider">{user.role}</p>
           </div>
           
@@ -129,7 +129,7 @@ const Navbar = () => {
 
           <div class="flex items-center justify-between border-t border-slate-800/80 pt-4 px-2">
             <div class="text-left">
-              <p class="text-sm font-semibold text-slate-200">{user.username}</p>
+              <p class="text-sm font-semibold text-slate-200">{user.fullName || user.username}</p>
               <p class="text-xs text-indigo-400 font-mono tracking-wider">{user.role}</p>
             </div>
             

@@ -37,9 +37,9 @@ const getMockUsers = () => {
   let users = localStorage.getItem('mock_users');
   if (!users) {
     const defaultUsers = [
-      { id: 'u1', username: 'admin', email: 'admin@library.com', password: 'password', role: 'ADMIN', createdAt: new Date().toISOString() },
-      { id: 'u2', username: 'librarian', email: 'librarian@library.com', password: 'password', role: 'LIBRARIAN', createdAt: new Date().toISOString() },
-      { id: 'u3', username: 'member1', email: 'member1@library.com', password: 'password', role: 'MEMBER', createdAt: new Date().toISOString() }
+      { id: 'u1', username: 'admin', email: 'admin@library.com', password: 'password', role: 'ADMIN', fullName: 'System Administrator', createdAt: new Date().toISOString() },
+      { id: 'u2', username: 'librarian', email: 'librarian@library.com', password: 'password', role: 'LIBRARIAN', fullName: 'Library Coordinator', createdAt: new Date().toISOString() },
+      { id: 'u3', username: 'member1', email: 'member1@library.com', password: 'password', role: 'MEMBER', fullName: 'Alice Johnson', createdAt: new Date().toISOString() }
     ];
     localStorage.setItem('mock_users', JSON.stringify(defaultUsers));
     return defaultUsers;
@@ -244,7 +244,7 @@ const mockAdapter = (config) => {
       try {
         // --- AUTH REGISTRATION ---
         if (pathname === '/auth/register' && method === 'POST') {
-          const { username, email, password, role } = body;
+          const { username, email, password, role, fullName } = body;
           const users = getMockUsers();
           if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
             return reject(mockError(400, 'Username already exists.'));
@@ -258,6 +258,7 @@ const mockAdapter = (config) => {
             email,
             password,
             role: role || 'MEMBER',
+            fullName: fullName || username,
             createdAt: new Date().toISOString()
           };
           users.push(newUser);
@@ -277,7 +278,8 @@ const mockAdapter = (config) => {
             token: 'mock-jwt-token-' + user.id,
             username: user.username,
             email: user.email,
-            role: user.role
+            role: user.role,
+            fullName: user.fullName || user.username
           }, config));
         }
 
@@ -293,7 +295,7 @@ const mockAdapter = (config) => {
 
           // POST /members
           if (method === 'POST') {
-            const { username, email, password, role } = body;
+            const { username, email, password, role, fullName } = body;
             if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
               return reject(mockError(400, 'Username already exists.'));
             }
@@ -306,6 +308,7 @@ const mockAdapter = (config) => {
               email,
               password,
               role: role || 'MEMBER',
+              fullName: fullName || username,
               createdAt: new Date().toISOString()
             };
             users.push(newUser);
@@ -319,7 +322,7 @@ const mockAdapter = (config) => {
             const idx = users.findIndex(u => u.id === id);
             if (idx === -1) return reject(mockError(404, 'User not found.'));
             
-            const { username, email, password, role } = body;
+            const { username, email, password, role, fullName } = body;
             if (users.some(u => u.id !== id && u.username.toLowerCase() === username.toLowerCase())) {
               return reject(mockError(400, 'Username already exists.'));
             }
@@ -332,6 +335,7 @@ const mockAdapter = (config) => {
               username,
               email,
               role,
+              fullName: fullName || users[idx].fullName || username,
               ...(password ? { password } : {})
             };
             saveMockUsers(users);

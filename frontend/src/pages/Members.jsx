@@ -13,6 +13,7 @@ const Members = () => {
   const [selectedMember, setSelectedMember] = useState(null);
   const [formData, setFormData] = useState({
     username: '',
+    fullName: '',
     email: '',
     password: '',
     role: 'MEMBER',
@@ -45,6 +46,7 @@ const Members = () => {
     setSelectedMember(null);
     setFormData({
       username: '',
+      fullName: '',
       email: '',
       password: '',
       role: 'MEMBER',
@@ -56,6 +58,7 @@ const Members = () => {
     setSelectedMember(member);
     setFormData({
       username: member.username,
+      fullName: member.fullName || '',
       email: member.email,
       password: '', // Leave blank to avoid changing password unless written
       role: member.role,
@@ -169,6 +172,7 @@ const Members = () => {
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="bg-slate-900/80 text-slate-400 border-b border-slate-800 text-xs font-semibold uppercase tracking-wider">
+                  <th class="py-3.5 px-4 sm:py-4 sm:px-6">Name</th>
                   <th class="py-3.5 px-4 sm:py-4 sm:px-6">Username</th>
                   <th class="py-3.5 px-4 sm:py-4 sm:px-6">Email Address</th>
                   <th class="py-3.5 px-4 sm:py-4 sm:px-6">System Role</th>
@@ -179,7 +183,8 @@ const Members = () => {
               <tbody class="divide-y divide-slate-800/50 text-sm text-slate-300">
                 {members.map((member) => (
                   <tr key={member.id} class="hover:bg-slate-900/30 transition-colors">
-                    <td class="py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-100">{member.username}</td>
+                    <td class="py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-100">{member.fullName || member.username}</td>
+                    <td class="py-3 px-4 sm:py-4 sm:px-6 text-slate-300 font-mono text-xs">{member.username}</td>
                     <td class="py-3 px-4 sm:py-4 sm:px-6 font-mono text-xs">{member.email}</td>
                     <td class="py-3 px-4 sm:py-4 sm:px-6">
                       <span class={`px-2 py-1 text-xs font-bold font-mono tracking-wider rounded border ${
@@ -246,6 +251,19 @@ const Members = () => {
                   onChange={handleFormChange}
                   class="glass-input w-full px-4 py-2.5 rounded-xl"
                   placeholder="e.g. member_john"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Full Name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  required
+                  value={formData.fullName}
+                  onChange={handleFormChange}
+                  class="glass-input w-full px-4 py-2.5 rounded-xl"
+                  placeholder="e.g. John Doe"
                 />
               </div>
 

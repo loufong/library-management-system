@@ -14,6 +14,7 @@ CREATE TABLE users (
     password VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     role VARCHAR(20) NOT NULL,
+    full_name VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -50,11 +51,11 @@ CREATE TABLE loans (
 
 -- Seed Initial Data
 -- BCrypt password hashes are for password: 'password'
-INSERT INTO users (username, password, email, role) VALUES
-('admin', '$2a$10$vNIPD893bLNDW5M5hLw1gebCg.pQG0sB44a3K8J/rN9kM.H2p9pBO', 'admin@library.com', 'ADMIN'),
-('librarian', '$2a$10$vNIPD893bLNDW5M5hLw1gebCg.pQG0sB44a3K8J/rN9kM.H2p9pBO', 'librarian@library.com', 'LIBRARIAN'),
-('member1', '$2a$10$vNIPD893bLNDW5M5hLw1gebCg.pQG0sB44a3K8J/rN9kM.H2p9pBO', 'member1@library.com', 'MEMBER'),
-('member2', '$2a$10$vNIPD893bLNDW5M5hLw1gebCg.pQG0sB44a3K8J/rN9kM.H2p9pBO', 'member2@library.com', 'MEMBER');
+INSERT INTO users (username, password, email, role, full_name) VALUES
+('admin', '$2a$10$vNIPD893bLNDW5M5hLw1gebCg.pQG0sB44a3K8J/rN9kM.H2p9pBO', 'admin@library.com', 'ADMIN', 'System Administrator'),
+('librarian', '$2a$10$vNIPD893bLNDW5M5hLw1gebCg.pQG0sB44a3K8J/rN9kM.H2p9pBO', 'librarian@library.com', 'LIBRARIAN', 'Library Coordinator'),
+('member1', '$2a$10$vNIPD893bLNDW5M5hLw1gebCg.pQG0sB44a3K8J/rN9kM.H2p9pBO', 'member1@library.com', 'MEMBER', 'Alice Johnson'),
+('member2', '$2a$10$vNIPD893bLNDW5M5hLw1gebCg.pQG0sB44a3K8J/rN9kM.H2p9pBO', 'member2@library.com', 'MEMBER', 'Bob Smith');
 
 INSERT INTO books (title, author, isbn, publisher, published_year, genre, total_copies, available_copies, file_url, file_type, file_content, cover_url, description) VALUES
 ('The Great Gatsby', 'F. Scott Fitzgerald', '9780743273565', 'Scribner', 1925, 'Classic Fiction', 5, 5, '', 'NONE', '', 'https://covers.openlibrary.org/b/isbn/9780743273565-L.jpg', 'The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway\'s interactions with mysterious millionaire Jay Gatsby and Gatsby\'s obsession to reunite with his former love, Daisy Buchanan.'),

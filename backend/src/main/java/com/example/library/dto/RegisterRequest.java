@@ -21,6 +21,9 @@ public class RegisterRequest {
     @NotBlank(message = "Role is required")
     private String role; // ADMIN, LIBRARIAN, MEMBER
 
+    @NotBlank(message = "Full name is required")
+    private String fullName;
+
     public String getUsername() {
         return username;
     }
@@ -51,5 +54,13 @@ public class RegisterRequest {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

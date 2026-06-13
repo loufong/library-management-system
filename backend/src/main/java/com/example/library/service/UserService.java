@@ -55,6 +55,7 @@ public class UserService implements UserDetailsService {
                 registerRequest.getEmail(),
                 registerRequest.getRole().toUpperCase()
         );
+        user.setFullName(registerRequest.getFullName());
 
         return userRepository.save(user);
     }
@@ -91,6 +92,7 @@ public class UserService implements UserDetailsService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setRole(request.getRole().toUpperCase());
+        user.setFullName(request.getFullName());
         if (request.getPassword() != null && !request.getPassword().trim().isEmpty()) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }

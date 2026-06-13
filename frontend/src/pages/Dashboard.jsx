@@ -214,7 +214,12 @@ const Dashboard = () => {
                       ) : (
                         members.slice(0, 5).map((member) => (
                           <tr key={member.id} class="hover:bg-slate-900/20 transition-colors">
-                            <td class="py-3 px-4 font-semibold text-slate-100">{member.username}</td>
+                            <td class="py-3 px-4 font-semibold text-slate-100">
+                              <div class="flex flex-col">
+                                <span>{member.fullName || member.username}</span>
+                                {member.fullName && <span class="text-[10px] text-slate-500 font-mono">@{member.username}</span>}
+                              </div>
+                            </td>
                             <td class="py-3 px-4 font-mono">{member.email}</td>
                             <td class="py-3 px-4">
                               <span class={`px-2 py-0.5 text-[10px] font-bold font-mono tracking-wider rounded border ${
