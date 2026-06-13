@@ -10,9 +10,9 @@ const getBaseUrl = () => {
   }
   
   if (typeof window !== 'undefined' && window.location) {
-    // If the frontend is served on the Vite local dev server (default port 5173), point to local backend
+    // If the frontend is served on the Vite local dev server (default port 5173), point to the host backend
     if (window.location.port === '5173') {
-      return 'http://localhost:8080/api';
+      return `http://${window.location.hostname}:8080/api`;
     }
     // Otherwise, use relative path '/api' on the current host (works for Docker Compose, K8s Ingress, etc.)
     return '/api';

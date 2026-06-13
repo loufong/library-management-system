@@ -11,6 +11,7 @@ const Dashboard = () => {
     overdueLoans: 0,
     totalMembers: 0,
   });
+  const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -34,9 +35,11 @@ const Dashboard = () => {
         }
 
         let membersCount = 0;
+        let membersList = [];
         if (user.role === 'ADMIN' || user.role === 'LIBRARIAN') {
           const membersRes = await api.get('/members');
-          membersCount = membersRes.data.filter(m => m.role === 'MEMBER').length;
+          membersList = membersRes.data;
+          membersCount = membersList.filter(m => m.role === 'MEMBER').length;
         }
 
         const totalBooks = booksRes.data.reduce((acc, book) => acc + book.totalCopies, 0);
@@ -49,6 +52,7 @@ const Dashboard = () => {
           overdueLoans,
           totalMembers: membersCount,
         });
+        setMembers(membersList);
       } catch (err) {
         console.error(err);
         setError('Failed to fetch dashboard metrics. Please make sure the backend services are running.');
@@ -186,6 +190,62 @@ const Dashboard = () => {
               </Link>
             )}
           </div>
+
+          {/* Members List Panel on Dashboard (Admin/Librarian only) */}
+          {(user.role === 'ADMIN' || user.role === 'LIBRARIAN') && (
+            <div class="mt-8">
+              <h2 class="text-xl font-bold text-slate-200 mb-4">Registered Members</h2>
+              <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left border-collapse">
+                    <thead>
+                      <tr class="bg-slate-900/80 text-slate-400 border-b border-slate-800 text-xs font-semibold uppercase tracking-wider">
+                        <th class="py-3 px-4">Username</th>
+                        <th class="py-3 px-4">Email Address</th>
+                        <th class="py-3 px-4">Role</th>
+                        <th class="py-3 px-4">Joined Date</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/50 text-xs text-slate-300">
+                      {members.length === 0 ? (
+                        <tr>
+                          <td colSpan="4" class="py-4 text-center text-slate-500 italic">No registered members found.</td>
+                        </tr>
+                      ) : (
+                        members.slice(0, 5).map((member) => (
+                          <tr key={member.id} class="hover:bg-slate-900/20 transition-colors">
+                            <td class="py-3 px-4 font-semibold text-slate-100">{member.username}</td>
+                            <td class="py-3 px-4 font-mono">{member.email}</td>
+                            <td class="py-3 px-4">
+                              <span class={`px-2 py-0.5 text-[10px] font-bold font-mono tracking-wider rounded border ${
+                                member.role === 'ADMIN' 
+                                  ? 'bg-red-500/10 text-red-400 border-red-500/20' 
+                                  : member.role === 'LIBRARIAN' 
+                                    ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' 
+                                    : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
+                              }`}>
+                                {member.role}
+                              </span>
+                            </td>
+                            <td class="py-3 px-4 font-mono text-slate-400">
+                              {member.createdAt ? member.createdAt.split('T')[0] : 'N/A'}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                {members.length > 5 && (
+                  <div class="p-3 bg-slate-900/40 border-t border-slate-800/60 text-center">
+                    <Link to="/members" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+                      View all {members.length} members &rarr;
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
