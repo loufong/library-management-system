@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library OS - UI Upgrade Presentation</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Slide transition animations */
+    .slide-container {
+      perspective: 1500px;
+    }
+    .slide {
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1) rotateY(0);
+      pointer-events: auto;
+      z-index: 10;
+    }
+    .slide.next {
+      opacity: 0;
+      transform: translateX(100%) scale(0.9) rotateY(-15deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .slide.prev {
+      opacity: 0;
+      transform: translateX(-100%) scale(0.9) rotateY(15deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glow-blob {
+      filter: blur(120px);
+      opacity: 0.15;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="h-full select-none overflow-hidden font-sans antialiased bg-slate-950">
+
+  <!-- Floating animated background blobs -->
+  <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-indigo-600 glow-blob animate-pulse duration-[8s]"></div>
+  <div class="absolute -bottom-40 -right-40 w-[30rem] h-[30rem] rounded-full bg-purple-600 glow-blob animate-pulse duration-[12s]"></div>
+  <div class="absolute top-1/2 left-2/3 w-80 h-80 rounded-full bg-emerald-600 glow-blob animate-pulse duration-[10s]"></div>
+
+  <div class="relative w-full h-full flex flex-col justify-between p-6 md:p-8 z-10">
+    
+    <!-- Top Header -->
+    <header class="flex items-center justify-between border-b border-white/10 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-indigo-600/20 border border-indigo-500/30 rounded-xl">
+          <i data-lucide="library" class="h-6 w-6 text-indigo-400"></i>
+        </div>
+        <span class="font-display font-extrabold text-lg bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent tracking-tight">Library OS</span>
+      </div>
+      <div class="text-xs text-slate-400 font-mono tracking-wider">PROJECT PRESENTATION</div>
+    </header>
+
+    <!-- Slides Container -->
+    <main class="flex-1 my-6 relative overflow-hidden slide-container flex items-center justify-center">
+
+      <!-- SLIDE 1: Title Slide -->
+      <div class="slide absolute inset-0 flex flex-col justify-center items-center text-center max-w-4xl mx-auto px-4 active" id="slide-1">
+        <span class="px-3 py-1 text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-full uppercase tracking-wider mb-6 animate-bounce">System Modernization</span>
+        <h1 class="font-display font-extrabold text-4xl md:text-6xl text-slate-100 tracking-tight leading-tight">
+          Library OS <br>
+          <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">UI & Feature Modernization</span>
+        </h1>
+        <p class="text-base md:text-xl text-slate-400 mt-6 max-w-xl font-light">
+          An upgraded, immersive book browsing catalog featuring automated covers, smart 3D CSS previews, and dynamic descriptions.
+        </p>
+        <div class="mt-10 flex gap-4 text-xs font-mono text-slate-400 border border-white/10 rounded-2xl p-4 bg-slate-900/40">
+          <div><span class="text-indigo-400">Speaker:</span> Development Team</div>
+          <div class="border-l border-white/10 px-4"><span class="text-purple-400">Target:</span> Library Management System</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: Project Overview -->
+      <div class="slide absolute inset-0 flex flex-col justify-center max-w-5xl mx-auto px-4 next" id="slide-2">
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-slate-100 mb-6 flex items-center gap-3">
+          <i data-lucide="info" class="h-8 w-8 text-indigo-400"></i>
+          <span>System Overview</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="space-y-6">
+            <p class="text-slate-300 leading-relaxed">
+              <strong>Library OS</strong> is a comprehensive management system engineered for educational institutions, libraries, and book clubs to streamline inventory tracking, loans history, and user directory permissions.
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-start gap-3">
+                <div class="p-1 bg-indigo-500/20 rounded-lg text-indigo-400 mt-1"><i data-lucide="check" class="h-4 w-4"></i></div>
+                <div>
+                  <h4 class="font-semibold text-slate-200 text-sm">Role-Based Access</h4>
+                  <p class="text-xs text-slate-400">Separates Admin controls, Librarian processing, and Member browsing.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="p-1 bg-purple-500/20 rounded-lg text-purple-400 mt-1"><i data-lucide="check" class="h-4 w-4"></i></div>
+                <div>
+                  <h4 class="font-semibold text-slate-200 text-sm">Active Loan Management</h4>
+                  <p class="text-xs text-slate-400">Interactive checkout histories, real-time deadlines, and return automation.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glass-card p-6 rounded-2xl border border-slate-800 flex flex-col gap-4">
+            <div class="flex justify-between items-center text-xs text-slate-400 border-b border-white/5 pb-2">
+              <span>ACTIVE USER DIRECTORY</span>
+              <span class="text-indigo-400 font-mono">ROLE ACCESS</span>
+            </div>
+            <div class="space-y-2.5">
+              <div class="flex justify-between items-center bg-slate-950/40 p-2.5 rounded-xl border border-white/5">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-indigo-500/20 flex items-center justify-center text-[10px] text-indigo-300">AD</div>
+                  <span class="text-xs font-semibold text-slate-200">admin</span>
+                </div>
+                <span class="text-[9px] font-mono font-bold text-rose-400 border border-rose-500/20 bg-rose-500/10 px-1.5 py-0.5 rounded">ADMIN</span>
+              </div>
+              <div class="flex justify-between items-center bg-slate-950/40 p-2.5 rounded-xl border border-white/5">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-[10px] text-purple-300">LB</div>
+                  <span class="text-xs font-semibold text-slate-200">librarian</span>
+                </div>
+                <span class="text-[9px] font-mono font-bold text-amber-400 border border-amber-500/20 bg-amber-500/10 px-1.5 py-0.5 rounded">LIBRARIAN</span>
+              </div>
+              <div class="flex justify-between items-center bg-slate-950/40 p-2.5 rounded-xl border border-white/5">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px] text-emerald-300">M1</div>
+                  <span class="text-xs font-semibold text-slate-200">member1</span>
+                </div>
+                <span class="text-[9px] font-mono font-bold text-indigo-400 border border-indigo-500/20 bg-indigo-500/10 px-1.5 py-0.5 rounded">MEMBER</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: Architecture & Tech Stack -->
+      <div class="slide absolute inset-0 flex flex-col justify-center max-w-5xl mx-auto px-4 next" id="slide-3">
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-slate-100 mb-6 flex items-center gap-3">
+          <i data-lucide="layers" class="h-8 w-8 text-indigo-400"></i>
+          <span>Architecture & Stack</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="glass-card p-6 rounded-2xl flex flex-col h-full hover:border-indigo-500/30 transition-colors">
+            <div class="p-3 bg-indigo-600/20 rounded-xl w-fit mb-4"><i data-lucide="chrome" class="h-6 w-6 text-indigo-400"></i></div>
+            <h3 class="font-bold text-lg text-slate-100 mb-2">Vite & React Frontend</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Single Page React client utilizing TailwindCSS for micro-animations and modular component layouts. Serves e-book reads and profile actions.
+            </p>
+            <div class="mt-auto pt-4 border-t border-white/5 text-[10px] font-mono text-indigo-300">PORT: 80 / dev 5173</div>
+          </div>
+          <div class="glass-card p-6 rounded-2xl flex flex-col h-full hover:border-purple-500/30 transition-colors">
+            <div class="p-3 bg-purple-600/20 rounded-xl w-fit mb-4"><i data-lucide="cpu" class="h-6 w-6 text-purple-400"></i></div>
+            <h3 class="font-bold text-lg text-slate-100 mb-2">Spring Boot API</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              RESTful architecture utilizing Hibernate JPA for database persistence, JWT tokens for auth verification, and dynamic JSON controller mappings.
+            </p>
+            <div class="mt-auto pt-4 border-t border-white/5 text-[10px] font-mono text-purple-300">PORT: 8080 (Java 17)</div>
+          </div>
+          <div class="glass-card p-6 rounded-2xl flex flex-col h-full hover:border-emerald-500/30 transition-colors">
+            <div class="p-3 bg-emerald-600/20 rounded-xl w-fit mb-4"><i data-lucide="database" class="h-6 w-6 text-emerald-400"></i></div>
+            <h3 class="font-bold text-lg text-slate-100 mb-2">MySQL Database</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Relational backend schemas tracking primary tables (users, books, loans) with dynamic column upgrades via JPA ddl-auto properties.
+            </p>
+            <div class="mt-auto pt-4 border-t border-white/5 text-[10px] font-mono text-emerald-300">PORT: 3306 (MySQL 8.0)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: UI Upgrade: Book Covers -->
+      <div class="slide absolute inset-0 flex flex-col justify-center max-w-5xl mx-auto px-4 next" id="slide-4">
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-slate-100 mb-6 flex items-center gap-3">
+          <i data-lucide="image" class="h-8 w-8 text-indigo-400"></i>
+          <span>UI Upgrade: Cover Image System</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="space-y-4">
+            <p class="text-slate-300 leading-relaxed">
+              We replaced plain text cards with a multi-layered cover resolution pipeline.
+            </p>
+            <ul class="space-y-3 text-xs md:text-sm text-slate-400">
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="link" class="h-4 w-4 text-indigo-400 shrink-0"></i>
+                <span><strong>Custom Links:</strong> Option to input custom cover URLs.</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="globe" class="h-4 w-4 text-indigo-400 shrink-0"></i>
+                <span><strong>Open Library API:</strong> Fallback to search covers by ISBN.</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <i data-lucide="sparkles" class="h-4 w-4 text-indigo-400 shrink-0"></i>
+                <span><strong>3D Fallback Gradients:</strong> Programmatically generated cover designs styled dynamically according to the book's genre if offline or missing.</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="flex gap-4 justify-center">
+            <!-- Simulated CSS Cover 1 -->
+            <div class="relative w-44 h-60 rounded-xl p-4 flex flex-col justify-between shadow-2xl border-l-[6px] border-black/40 bg-gradient-to-br from-indigo-600 to-purple-800 text-white shrink-0 rotate-[-5deg]">
+              <span class="text-[8px] font-bold uppercase tracking-widest bg-white/20 px-1.5 py-0.5 rounded w-fit">Technology</span>
+              <div class="my-auto">
+                <h4 class="text-sm font-extrabold font-serif">Clean Code</h4>
+                <p class="text-[9px] text-white/80 mt-1">Robert C. Martin</p>
+              </div>
+              <span class="text-[7px] font-mono text-white/50">ISBN 9780132350884</span>
+            </div>
+            <!-- Simulated CSS Cover 2 -->
+            <div class="relative w-44 h-60 rounded-xl p-4 flex flex-col justify-between shadow-2xl border-l-[6px] border-black/40 bg-gradient-to-br from-amber-600 to-red-800 text-white shrink-0 rotate-[5deg]">
+              <span class="text-[8px] font-bold uppercase tracking-widest bg-white/20 px-1.5 py-0.5 rounded w-fit">Classic</span>
+              <div class="my-auto">
+                <h4 class="text-sm font-extrabold font-serif">The Great Gatsby</h4>
+                <p class="text-[9px] text-white/80 mt-1">F. Scott Fitzgerald</p>
+              </div>
+              <span class="text-[7px] font-mono text-white/50">ISBN 9780743273565</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: UI Upgrade: Captions & Forms -->
+      <div class="slide absolute inset-0 flex flex-col justify-center max-w-5xl mx-auto px-4 next" id="slide-5">
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-slate-100 mb-6 flex items-center gap-3">
+          <i data-lucide="edit-3" class="h-8 w-8 text-indigo-400"></i>
+          <span>UI Upgrade: Captions & Modals</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-4">
+            <div class="flex items-center gap-2 border-b border-white/5 pb-2">
+              <div class="w-3.5 h-3.5 rounded-full bg-red-500"></div>
+              <div class="w-3.5 h-3.5 rounded-full bg-yellow-500"></div>
+              <div class="w-3.5 h-3.5 rounded-full bg-green-500"></div>
+              <span class="text-xs text-slate-500 font-mono ml-2">Edit Book Catalog</span>
+            </div>
+            <div class="space-y-3 text-xs">
+              <div>
+                <label class="text-slate-500 block mb-1 font-semibold uppercase tracking-wider text-[10px]">Cover Image URL</label>
+                <div class="bg-slate-950 p-2.5 rounded-lg border border-white/5 text-indigo-300 font-mono text-[10px] truncate">https://covers.openlibrary.org/b/isbn/9780132350884-L.jpg</div>
+              </div>
+              <div>
+                <label class="text-slate-500 block mb-1 font-semibold uppercase tracking-wider text-[10px]">Description / Caption</label>
+                <div class="bg-slate-950 p-2.5 rounded-lg border border-white/5 text-slate-300 italic font-light leading-relaxed">
+                  In Clean Code, software expert Robert C. Martin presents a revolutionary paradigm to help write better, cleaner code.
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <h3 class="font-bold text-xl text-slate-200">Refined Modals & Table Inline Previews</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              We upgraded the Admin/Librarian control panels to support these fields natively.
+            </p>
+            <ul class="space-y-3 text-xs text-slate-400">
+              <li class="flex items-center gap-2">
+                <i data-lucide="arrow-right" class="h-4 w-4 text-purple-400"></i>
+                <span><strong>Add/Edit Form Schema:</strong> Expanded state to submit covers and descriptions.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="arrow-right" class="h-4 w-4 text-purple-400"></i>
+                <span><strong>Description block:</strong> Added elegant italicized summary bubbles to each catalog item.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="arrow-right" class="h-4 w-4 text-purple-400"></i>
+                <span><strong>Table Thumbnails:</strong> Checkouts logs in Loans view display small covers for quick visual alignment.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: Demo Instructions -->
+      <div class="slide absolute inset-0 flex flex-col justify-center max-w-5xl mx-auto px-4 next" id="slide-6">
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-slate-100 mb-6 flex items-center gap-3">
+          <i data-lucide="play" class="h-8 w-8 text-indigo-400"></i>
+          <span>Live Demo & Verification</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold text-lg text-slate-250 mb-3">System Access URLs</h3>
+              <div class="space-y-2.5 font-mono text-xs">
+                <div class="flex justify-between items-center bg-slate-950/40 p-2.5 rounded-lg border border-white/5">
+                  <span class="text-slate-400">Portal View:</span>
+                  <a href="http://localhost" target="_blank" class="text-indigo-400 underline hover:text-indigo-300">http://localhost</a>
+                </div>
+                <div class="flex justify-between items-center bg-slate-950/40 p-2.5 rounded-lg border border-white/5">
+                  <span class="text-slate-400">Auth Path:</span>
+                  <a href="http://localhost/#/login" target="_blank" class="text-indigo-400 underline hover:text-indigo-300">http://localhost/#/login</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="border-t border-white/5 pt-4 mt-6">
+              <h4 class="font-bold text-xs text-slate-400 uppercase tracking-wider mb-2">Default Accounts (password: password)</h4>
+              <div class="flex flex-wrap gap-2 text-[10px] font-mono">
+                <span class="bg-indigo-500/10 text-indigo-300 border border-indigo-500/25 px-2 py-0.5 rounded">admin</span>
+                <span class="bg-purple-500/10 text-purple-300 border border-purple-500/25 px-2 py-0.5 rounded">librarian</span>
+                <span class="bg-emerald-500/10 text-emerald-300 border border-emerald-500/25 px-2 py-0.5 rounded">member1</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="glass-card p-6 rounded-2xl flex flex-col justify-between border-l-4 border-emerald-500">
+            <div>
+              <h3 class="font-bold text-lg text-slate-200 mb-2">Recent Database Update</h3>
+              <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                Seeded 4 new visual books into database catalog for instant testing on bootup:
+              </p>
+              <div class="space-y-1.5 text-xs text-slate-300 font-mono">
+                <div>- The Lord of the Rings</div>
+                <div>- Harry Potter & Sorcerer's Stone</div>
+                <div>- Refactoring (Martin Fowler)</div>
+                <div>- Brave New World</div>
+              </div>
+            </div>
+            <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 p-3 rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="check-circle" class="h-4 w-4"></i>
+              <span>Docker containers rebuilt and running healthy.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Bottom Navigation Footer -->
+    <footer class="flex items-center justify-between border-t border-white/10 pt-4 text-xs text-slate-400">
+      <div class="flex items-center gap-2">
+        <kbd class="px-2 py-1 bg-slate-900 border border-slate-800 rounded text-[10px] font-mono text-slate-300">←</kbd>
+        <kbd class="px-2 py-1 bg-slate-900 border border-slate-800 rounded text-[10px] font-mono text-slate-300">→</kbd>
+        <span>or <kbd class="px-2 py-1 bg-slate-900 border border-slate-800 rounded text-[10px] font-mono text-slate-300">Space</kbd> to navigate</span>
+      </div>
+      
+      <!-- Slide Progress Indicator -->
+      <div class="flex items-center gap-4">
+        <div class="w-32 h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+          <div class="h-full bg-indigo-500 transition-all duration-300" id="progress-bar" style="width: 16.66%;"></div>
+        </div>
+        <span class="font-mono text-slate-300" id="slide-number">1 / 6</span>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="prev-btn" class="p-2 hover:bg-slate-900 hover:text-slate-100 rounded-lg transition-colors"><i data-lucide="chevron-left" class="h-4 w-4"></i></button>
+        <button id="next-btn" class="p-2 hover:bg-slate-900 hover:text-slate-100 rounded-lg transition-colors"><i data-lucide="chevron-right" class="h-4 w-4"></i></button>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Initialize icons
+    lucide.createIcons();
+
+    // Slide variables
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlideIndex = 0;
+
+    const progressBar = document.getElementById('progress-bar');
+    const slideNumber = document.getElementById('slide-number');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    function updateSlides() {
+      slides.forEach((slide, idx) => {
+        slide.classList.remove('active', 'next', 'prev');
+        if (idx === currentSlideIndex) {
+          slide.classList.add('active');
+        } else if (idx < currentSlideIndex) {
+          slide.classList.add('prev');
+        } else {
+          slide.classList.add('next');
+        }
+      });
+
+      // Update footer details
+      progressBar.style.width = `${((currentSlideIndex + 1) / totalSlides) * 100}%`;
+      slideNumber.innerText = `${currentSlideIndex + 1} / ${totalSlides}`;
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < totalSlides - 1) {
+        currentSlideIndex++;
+        updateSlides();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        updateSlides();
+      }
+    }
+
+    // Button Listeners
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    // Keyboard Listeners
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+
+    // Touch Swipe Support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) {
+        nextSlide();
+      } else if (touchEndX - touchStartX > 50) {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>
