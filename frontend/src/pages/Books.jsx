@@ -361,55 +361,47 @@ const Books = () => {
       ) : (
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {books.map((book) => (
-            <div key={book.id} class="glass-card p-4 rounded-2xl flex flex-col justify-between hover:border-slate-700/50 hover:bg-slate-900/40 shadow-xl transition-all duration-300 hover:-translate-y-1 relative group">
+            <div key={book.id} class="glass-card p-4 rounded-2xl flex flex-col justify-between hover:border-slate-800/80 hover:bg-slate-900/30 shadow-xl transition-all duration-300 hover:-translate-y-1 relative group">
               <div>
                 <BookCover book={book} />
                 
-                <div class="mt-2.5">
-                  <h3 class="text-sm font-bold text-slate-100 line-clamp-1 leading-tight group-hover:text-indigo-400 transition-colors" title={book.title}>
+                <div class="mt-3">
+                  <div class="flex items-center justify-between gap-2 text-[10px]">
+                    <span class="text-slate-500 font-mono tracking-wider uppercase">{book.genre || 'General'}</span>
+                    <span class={`flex items-center gap-1 font-medium ${book.availableCopies > 0 ? 'text-emerald-500' : 'text-slate-500'}`}>
+                      <span class={`h-1 w-1 rounded-full ${book.availableCopies > 0 ? 'bg-emerald-500' : 'bg-slate-500'}`}></span>
+                      {book.availableCopies > 0 ? `${book.availableCopies}/${book.totalCopies} Free` : 'Out of Stock'}
+                    </span>
+                  </div>
+
+                  <h3 class="text-sm font-bold text-slate-200 mt-1.5 line-clamp-1 group-hover:text-indigo-400 transition-colors" title={book.title}>
                     {book.title}
                   </h3>
-                  <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">
-                    by {book.author}
+                  <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                    {book.author}
                   </p>
-                  
-                  <div class="mt-2 flex items-center gap-2">
-                    <span class="px-2 py-0.5 text-[9px] font-medium bg-slate-800/80 text-slate-300 rounded border border-slate-700/50 uppercase tracking-wider font-mono">
-                      {book.genre || 'General'}
-                    </span>
-                  </div>
-                  
-                  <div class="mt-2.5 flex items-center gap-1.5 text-xs">
-                    <span class={`h-1.5 w-1.5 rounded-full ${book.availableCopies > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`}></span>
-                    <span class={book.availableCopies > 0 ? 'text-emerald-400 font-medium' : 'text-rose-400 font-medium'}>
-                      {book.availableCopies > 0 ? 'Available' : 'Out of Stock'}
-                    </span>
-                    <span class="text-slate-500 text-[10px]">
-                      ({book.availableCopies}/{book.totalCopies})
-                    </span>
-                  </div>
                 </div>
               </div>
 
-              {/* Footer Action Row */}
-              <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between gap-1 w-full text-slate-400">
-                {/* Save Button */}
+              {/* Minimalist Footer Action Row */}
+              <div class="mt-4 pt-3.5 border-t border-slate-800/50 flex items-center justify-between gap-2 w-full">
+                {/* Save (Bookmark) Icon Button */}
                 <button 
                   type="button"
                   onClick={() => alert(`Saved "${book.title}" to bookmarks!`)} 
-                  class="flex-1 flex flex-col items-center justify-center gap-1.5 py-1 text-slate-400 hover:text-slate-200 active:scale-95 transition-all text-[9px] font-semibold"
+                  class="p-2 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-slate-800/40 active:scale-90 transition-all shrink-0"
+                  title="Bookmark"
                 >
-                  <Bookmark className="h-3.5 w-3.5" />
-                  <span>Save</span>
+                  <Bookmark className="h-4 w-4" />
                 </button>
 
-                {/* Borrow/Read Action Button */}
+                {/* Primary Borrow/Read Pill Action Button */}
                 {currentUser.role === 'MEMBER' ? (
                   borrowedBookIds.has(book.id) ? (
                     <button 
                       type="button"
                       disabled 
-                      class="flex-1 flex flex-col items-center justify-center gap-1.5 py-1 text-emerald-400 text-[9px] font-semibold"
+                      class="flex-1 py-1.5 bg-emerald-950/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1"
                     >
                       <Check className="h-3.5 w-3.5" />
                       <span>Borrowed</span>
@@ -419,8 +411,7 @@ const Books = () => {
                       type="button"
                       onClick={() => handleBorrowBook(book)}
                       disabled={book.availableCopies <= 0 || borrowedBookIds.size > 0}
-                      class="flex-1 flex flex-col items-center justify-center gap-1.5 py-1 text-indigo-400 hover:text-indigo-200 disabled:opacity-30 active:scale-95 transition-all text-[9px] font-semibold"
-                      title={borrowedBookIds.size > 0 ? "Return borrowed book first" : ""}
+                      class="flex-1 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-[11px] font-semibold shadow-md shadow-indigo-600/10 hover:shadow-indigo-500/20 disabled:opacity-30 disabled:hover:bg-indigo-600 disabled:hover:shadow-none active:scale-[0.97] transition-all flex items-center justify-center gap-1"
                     >
                       <ArrowDownToLine className="h-3.5 w-3.5" />
                       <span>Borrow</span>
@@ -431,7 +422,7 @@ const Books = () => {
                     type="button"
                     onClick={() => handleOpenReader(book)}
                     disabled={!book.fileType || book.fileType === 'NONE'}
-                    class="flex-1 flex flex-col items-center justify-center gap-1.5 py-1 text-indigo-400 hover:text-indigo-200 disabled:opacity-30 active:scale-95 transition-all text-[9px] font-semibold"
+                    class="flex-1 py-1.5 bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/30 hover:border-transparent rounded-xl text-[11px] font-semibold active:scale-[0.97] disabled:opacity-35 transition-all flex items-center justify-center gap-1"
                   >
                     <BookOpen className="h-3.5 w-3.5" />
                     <span>Read</span>
@@ -442,12 +433,12 @@ const Books = () => {
                 <div class="relative group/menu">
                   <button 
                     type="button"
-                    class="flex flex-col items-center justify-center p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 rounded-lg active:scale-95 transition-all"
+                    class="p-2 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-slate-800/40 active:scale-90 transition-all shrink-0"
                     aria-label="More options"
                   >
                     <MoreHorizontal className="h-4 w-4" />
                   </button>
-                  <div class="absolute bottom-full right-0 mb-2 w-32 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-1.5 hidden group-hover/menu:block hover:block z-20">
+                  <div class="absolute bottom-full right-0 mb-2 w-32 bg-slate-950 border border-slate-800 rounded-xl shadow-2xl p-1.5 hidden group-hover/menu:block hover:block z-20">
                     {isAdminOrLibrarian && (
                       <button
                         type="button"

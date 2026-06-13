@@ -54,7 +54,7 @@ const saveMockUsers = (users) => {
 const getMockBooks = () => {
   let books = localStorage.getItem('mock_books');
   // Force reset if the old schema or new books are missing
-  if (books && (!books.includes('fileType') || !books.includes('b5') || !books.includes('b6') || !books.includes('b7'))) {
+  if (books && (!books.includes('fileType') || !books.includes('b5') || !books.includes('b6') || !books.includes('b7') || !books.includes('b8') || !books.includes('b9') || !books.includes('b10'))) {
     books = null;
   }
   if (!books) {
@@ -156,6 +156,48 @@ const getMockBooks = () => {
         fileType: 'TEXT',
         fileUrl: '',
         fileContent: 'Alice\'s Adventures in Wonderland: Chapter 1 - Down the Rabbit-Hole\n\nAlice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, \'and what is the use of a book,\' thought Alice \'without pictures or conversations?\'\n\n---PAGE---\nAlice\'s Adventures in Wonderland: Down the Rabbit-Hole (Cont.)\n\nSo she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.'
+      },
+      {
+        id: 'b8',
+        title: 'JavaScript: The Good Parts',
+        author: 'Douglas Crockford',
+        isbn: '9780596517748',
+        publisher: 'O\'Reilly Media',
+        publishedYear: 2008,
+        genre: 'Technology',
+        totalCopies: 3,
+        availableCopies: 3,
+        fileType: 'PDF',
+        fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileContent: ''
+      },
+      {
+        id: 'b9',
+        title: 'Eloquent JavaScript',
+        author: 'Marijn Haverbeke',
+        isbn: '9781593279509',
+        publisher: 'No Starch Press',
+        publishedYear: 2018,
+        genre: 'Technology',
+        totalCopies: 4,
+        availableCopies: 4,
+        fileType: 'PDF',
+        fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileContent: ''
+      },
+      {
+        id: 'b10',
+        title: 'A Brief History of Time',
+        author: 'Stephen Hawking',
+        isbn: '9780553380163',
+        publisher: 'Bantam Books',
+        publishedYear: 1998,
+        genre: 'Science',
+        totalCopies: 3,
+        availableCopies: 3,
+        fileType: 'PDF',
+        fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileContent: ''
       }
     ];
     localStorage.setItem('mock_books', JSON.stringify(defaultBooks));
