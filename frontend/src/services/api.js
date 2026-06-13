@@ -10,9 +10,9 @@ const getBaseUrl = () => {
   }
   
   if (typeof window !== 'undefined' && window.location) {
-    // If the frontend is served on the Vite local dev server (default port 5173), point to the host backend
+    // If the frontend is served on the Vite local dev server (default port 5173), point to local backend
     if (window.location.port === '5173') {
-      return `http://${window.location.hostname}:8080/api`;
+      return 'http://localhost:8080/api';
     }
     // Otherwise, use relative path '/api' on the current host (works for Docker Compose, K8s Ingress, etc.)
     return '/api';
@@ -37,9 +37,9 @@ const getMockUsers = () => {
   let users = localStorage.getItem('mock_users');
   if (!users) {
     const defaultUsers = [
-      { id: 'u1', username: 'admin', email: 'admin@library.com', password: 'password', role: 'ADMIN', fullName: 'System Administrator', createdAt: new Date().toISOString() },
-      { id: 'u2', username: 'librarian', email: 'librarian@library.com', password: 'password', role: 'LIBRARIAN', fullName: 'Library Coordinator', createdAt: new Date().toISOString() },
-      { id: 'u3', username: 'member1', email: 'member1@library.com', password: 'password', role: 'MEMBER', fullName: 'Alice Johnson', createdAt: new Date().toISOString() }
+      { id: 'u1', username: 'admin', email: 'admin@library.com', password: 'password', role: 'ADMIN', createdAt: new Date().toISOString() },
+      { id: 'u2', username: 'librarian', email: 'librarian@library.com', password: 'password', role: 'LIBRARIAN', createdAt: new Date().toISOString() },
+      { id: 'u3', username: 'member1', email: 'member1@library.com', password: 'password', role: 'MEMBER', createdAt: new Date().toISOString() }
     ];
     localStorage.setItem('mock_users', JSON.stringify(defaultUsers));
     return defaultUsers;
@@ -244,7 +244,7 @@ const mockAdapter = (config) => {
       try {
         // --- AUTH REGISTRATION ---
         if (pathname === '/auth/register' && method === 'POST') {
-          const { username, email, password, role, fullName } = body;
+          const { username, email, password, role } = body;
           const users = getMockUsers();
           if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
             return reject(mockError(400, 'Username already exists.'));
@@ -258,7 +258,6 @@ const mockAdapter = (config) => {
             email,
             password,
             role: role || 'MEMBER',
-            fullName: fullName || username,
             createdAt: new Date().toISOString()
           };
           users.push(newUser);
@@ -278,8 +277,7 @@ const mockAdapter = (config) => {
             token: 'mock-jwt-token-' + user.id,
             username: user.username,
             email: user.email,
-            role: user.role,
-            fullName: user.fullName || user.username
+            role: user.role
           }, config));
         }
 
@@ -295,7 +293,7 @@ const mockAdapter = (config) => {
 
           // POST /members
           if (method === 'POST') {
-            const { username, email, password, role, fullName } = body;
+            const { username, email, password, role } = body;
             if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
               return reject(mockError(400, 'Username already exists.'));
             }
@@ -308,7 +306,6 @@ const mockAdapter = (config) => {
               email,
               password,
               role: role || 'MEMBER',
-              fullName: fullName || username,
               createdAt: new Date().toISOString()
             };
             users.push(newUser);
@@ -322,7 +319,7 @@ const mockAdapter = (config) => {
             const idx = users.findIndex(u => u.id === id);
             if (idx === -1) return reject(mockError(404, 'User not found.'));
             
-            const { username, email, password, role, fullName } = body;
+            const { username, email, password, role } = body;
             if (users.some(u => u.id !== id && u.username.toLowerCase() === username.toLowerCase())) {
               return reject(mockError(400, 'Username already exists.'));
             }
@@ -335,7 +332,6 @@ const mockAdapter = (config) => {
               username,
               email,
               role,
-              fullName: fullName || users[idx].fullName || username,
               ...(password ? { password } : {})
             };
             saveMockUsers(users);

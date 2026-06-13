@@ -17,10 +17,10 @@ const Login = () => {
 
     try {
       const response = await api.post('/auth/login', { username, password });
-      const { token, username: resUser, email, role, fullName } = response.data;
+      const { token, username: resUser, email, role } = response.data;
 
       localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify({ username: resUser, email, role, fullName }));
+      localStorage.setItem('user', JSON.stringify({ username: resUser, email, role }));
 
       navigate('/dashboard');
     } catch (err) {
