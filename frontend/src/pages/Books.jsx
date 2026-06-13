@@ -21,14 +21,14 @@ const BookCover = ({ book }) => {
 
   if (coverUrl && !imgError) {
     return (
-      <div class="relative w-full h-56 bg-slate-950/80 rounded-xl overflow-hidden flex items-center justify-center border border-slate-800/80 shadow-md group-hover:scale-[1.02] transition-transform duration-300">
+      <div class="relative w-full h-56 bg-slate-950/50 rounded-xl overflow-hidden flex items-center justify-center border border-slate-800/80 shadow-md group-hover:scale-[1.02] transition-transform duration-300">
         <img 
           src={coverUrl} 
           alt={book.title} 
           onError={() => setImgError(true)}
-          class="w-full h-full object-cover rounded-xl"
+          class="w-full h-full object-contain rounded-xl p-2"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent opacity-70"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-transparent opacity-20 pointer-events-none"></div>
       </div>
     );
   }
