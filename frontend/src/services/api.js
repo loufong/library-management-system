@@ -206,8 +206,39 @@ const getMockBooks = () => {
   return JSON.parse(books);
 };
 
+// In-memory store for large base64 file uploads to prevent localStorage QuotaExceededError
+const inMemoryFiles = {};
+
 const saveMockBooks = (books) => {
-  localStorage.setItem('mock_books', JSON.stringify(books));
+  // To prevent QuotaExceededError in localStorage, extract and store large fileContents in-memory
+  const sanitizedBooks = books.map(book => {
+    if (book.fileContent && book.fileContent.startsWith('data:') && book.fileContent.length > 51200) { // > 50KB
+      inMemoryFiles[book.id] = book.fileContent;
+      return {
+        ...book,
+        fileContent: '', // Clear the content from localStorage
+        // Ensure there is a fallback URL so the reader still works if refreshed
+        fileUrl: book.fileUrl || 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+      };
+    }
+    return book;
+  });
+
+  try {
+    localStorage.setItem('mock_books', JSON.stringify(sanitizedBooks));
+  } catch (e) {
+    console.error('Failed to save to localStorage:', e);
+    // If it still fails, try removing fileContent from ALL books to recover
+    const minimalBooks = sanitizedBooks.map(book => ({
+      ...book,
+      fileContent: ''
+    }));
+    try {
+      localStorage.setItem('mock_books', JSON.stringify(minimalBooks));
+    } catch (err) {
+      console.error('Critical: Failed to save even minimal books database to localStorage:', err);
+    }
+  }
 };
 
 const getMockLoans = () => {
@@ -407,6 +438,12 @@ const mockAdapter = (config) => {
                 (b.genre && b.genre.toLowerCase().includes(q))
               );
             }
+
+            // Merge in-memory files back for books
+            result = result.map(b => ({
+              ...b,
+              fileContent: inMemoryFiles[b.id] || b.fileContent || ''
+            }));
             
             const localUser = JSON.parse(localStorage.getItem('user') || '{}');
             if (localUser.role === 'MEMBER') {
@@ -450,7 +487,13 @@ const mockAdapter = (config) => {
             };
             books.push(newBook);
             saveMockBooks(books);
-            return resolve(mockResponse(200, newBook, config));
+
+            // Re-merge fileContent from inMemoryFiles to return the complete object to client
+            const responseBook = {
+              ...newBook,
+              fileContent: inMemoryFiles[newBook.id] || newBook.fileContent || ''
+            };
+            return resolve(mockResponse(200, responseBook, config));
           }
 
           // PUT /books/:id
@@ -481,7 +524,13 @@ const mockAdapter = (config) => {
               fileContent: fileContent !== undefined ? fileContent : prevBook.fileContent
             };
             saveMockBooks(books);
-            return resolve(mockResponse(200, books[idx], config));
+
+            // Re-merge fileContent from inMemoryFiles to return the complete object to client
+            const responseBook = {
+              ...books[idx],
+              fileContent: inMemoryFiles[books[idx].id] || books[idx].fileContent || ''
+            };
+            return resolve(mockResponse(200, responseBook, config));
           }
 
           // DELETE /books/:id
