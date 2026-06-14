@@ -73,7 +73,7 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   class="glass-input w-full pl-10 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-500/50"
-                  placeholder="john@example.com"
+                  placeholder="Enter your email"
                 />
               </div>
             </div>
