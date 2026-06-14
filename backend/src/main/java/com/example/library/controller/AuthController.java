@@ -36,12 +36,20 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+        String identifier = loginRequest.getUsername();
+        if (identifier == null || identifier.trim().isEmpty()) {
+            identifier = loginRequest.getEmail();
+        }
+        if (identifier == null || identifier.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Username or Email is required");
+        }
+
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(identifier, loginRequest.getPassword())
         );
 
-        final UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUsername());
-        final User user = userService.getUserByUsername(loginRequest.getUsername());
+        final UserDetails userDetails = userService.loadUserByUsername(identifier);
+        final User user = userService.getUserByUsername(identifier);
         
         final String token = jwtTokenUtil.generateToken(userDetails, user.getEmail(), user.getRole());
 

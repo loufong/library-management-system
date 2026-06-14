@@ -345,11 +345,11 @@ const mockAdapter = (config) => {
 
         // --- AUTH LOGIN ---
         if (pathname === '/auth/login' && method === 'POST') {
-          const { username, password } = body;
+          const { email, password } = body;
           const users = getMockUsers();
-          const user = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+          const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
           if (!user) {
-            return reject(mockError(400, 'Invalid username or password. Please try again.'));
+            return reject(mockError(400, 'Invalid email or password. Please try again.'));
           }
           return resolve(mockResponse(200, {
             token: 'mock-jwt-token-' + user.id,
