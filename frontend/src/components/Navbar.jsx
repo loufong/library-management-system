@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { BookOpen, Users, History, LogOut, Library, Menu, X, Settings } from 'lucide-react';
-import ConnectionSettings from './ConnectionSettings';
-import { isMockEnabled } from '../services/api';
+import { BookOpen, Users, History, LogOut, Library, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const userStr = localStorage.getItem('user');
   const [isOpen, setIsOpen] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   
   if (!userStr) return null;
   
@@ -76,18 +73,9 @@ const Navbar = () => {
           <div class="text-right">
             <p class="text-sm font-semibold text-slate-200">{user.username}</p>
             <div className="flex items-center gap-1.5 justify-end">
-              <span className={`w-1.5 h-1.5 rounded-full ${isMockEnabled() ? 'bg-indigo-400' : 'bg-emerald-400 animate-pulse'}`} title={isMockEnabled() ? 'Mock Database Mode' : 'Connected to Remote API'}></span>
               <p class="text-xs text-indigo-400 font-mono tracking-wider">{user.role}</p>
             </div>
           </div>
-
-          <button 
-            onClick={() => setShowSettings(true)}
-            class="flex items-center justify-center p-2 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-indigo-950/20 border border-transparent hover:border-indigo-500/30 transition-all duration-200"
-            title="Database Connection Settings"
-          >
-            <Settings className="h-5 w-5" />
-          </button>
           
           <button 
             onClick={handleLogout}
@@ -145,20 +133,11 @@ const Navbar = () => {
             <div class="text-left">
               <p class="text-sm font-semibold text-slate-200">{user.username}</p>
               <div className="flex items-center gap-1.5">
-                <span className={`w-1.5 h-1.5 rounded-full ${isMockEnabled() ? 'bg-indigo-400' : 'bg-emerald-400 animate-pulse'}`}></span>
                 <p class="text-xs text-indigo-400 font-mono tracking-wider">{user.role}</p>
               </div>
             </div>
             
             <div className="flex gap-2">
-              <button 
-                onClick={() => { setIsOpen(false); setShowSettings(true); }}
-                class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-400 hover:text-indigo-400 bg-slate-900 border border-slate-800 hover:border-indigo-500/30 transition-all duration-200 text-xs font-semibold"
-                title="Connection Settings"
-              >
-                <Settings className="h-4 w-4" />
-                <span>Settings</span>
-              </button>
 
               <button 
                 onClick={handleLogout}
@@ -172,7 +151,6 @@ const Navbar = () => {
         </div>
       )}
 
-      <ConnectionSettings isOpen={showSettings} onClose={() => setShowSettings(false)} />
     </nav>
   );
 };

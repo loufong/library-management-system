@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api, { isMockEnabled } from '../services/api';
-import { Library, Lock, User, Mail, AlertCircle, CheckCircle2, Settings } from 'lucide-react';
-import ConnectionSettings from '../components/ConnectionSettings';
+import api from '../services/api';
+import { Library, Lock, User, Mail, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -12,7 +11,6 @@ const Register = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -53,15 +51,7 @@ const Register = () => {
         </div>
 
         <div class="glass-card p-8 rounded-3xl shadow-2xl relative animate-fade-in">
-          {/* Settings gear trigger */}
-          <button 
-            type="button"
-            onClick={() => setShowSettings(true)}
-            className="absolute top-6 right-6 p-2 rounded-xl text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 border border-transparent hover:border-slate-800 transition-all duration-150"
-            title="Database Connection Settings"
-          >
-            <Settings className="h-5 w-5" />
-          </button>
+
 
           {error && (
             <div class="mb-6 flex items-start gap-3 p-4 bg-red-950/20 border border-red-500/30 text-red-200 rounded-xl text-sm animate-pulse">
@@ -138,17 +128,7 @@ const Register = () => {
             </button>
           </form>
 
-          {/* Connection Mode Indicator */}
-          <div className="mt-5 text-center">
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border ${
-              isMockEnabled() 
-                ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' 
-                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-            }`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${isMockEnabled() ? 'bg-indigo-400' : 'bg-emerald-400 animate-pulse'}`}></span>
-              <span>{isMockEnabled() ? 'Mock Database Mode' : 'Connected to Remote API'}</span>
-            </span>
-          </div>
+
 
           <p class="mt-5 text-center text-sm text-slate-400">
             Already have an account? {''}
@@ -159,7 +139,7 @@ const Register = () => {
         </div>
       </div>
 
-      <ConnectionSettings isOpen={showSettings} onClose={() => setShowSettings(false)} />
+
     </div>
   );
 };
