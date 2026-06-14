@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../services/api';
-import { Library, Lock, User, AlertCircle } from 'lucide-react';
+import api, { isMockEnabled } from '../services/api';
+import { Library, Lock, User, AlertCircle, Settings } from 'lucide-react';
+import ConnectionSettings from '../components/ConnectionSettings';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -49,7 +51,17 @@ const Login = () => {
           <p class="text-sm text-slate-400 mt-2">Sign in to access your library account</p>
         </div>
 
-        <div class="glass-card p-8 rounded-3xl shadow-2xl relative">
+        <div class="glass-card p-8 rounded-3xl shadow-2xl relative animate-fade-in">
+          {/* Settings gear trigger */}
+          <button 
+            type="button"
+            onClick={() => setShowSettings(true)}
+            className="absolute top-6 right-6 p-2 rounded-xl text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 border border-transparent hover:border-slate-800 transition-all duration-150"
+            title="Database Connection Settings"
+          >
+            <Settings className="h-5 w-5" />
+          </button>
+
           {error && (
             <div class="mb-6 flex items-start gap-3 p-4 bg-red-950/20 border border-red-500/30 text-red-200 rounded-xl text-sm animate-pulse">
               <AlertCircle className="h-5 w-5 text-red-400 shrink-0" />
@@ -103,7 +115,19 @@ const Login = () => {
             </button>
           </form>
 
-          <p class="mt-8 text-center text-sm text-slate-400">
+          {/* Connection Mode Indicator */}
+          <div className="mt-6 text-center">
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border ${
+              isMockEnabled() 
+                ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' 
+                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+            }`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${isMockEnabled() ? 'bg-indigo-400' : 'bg-emerald-400 animate-pulse'}`}></span>
+              <span>{isMockEnabled() ? 'Mock Database Mode' : 'Connected to Remote API'}</span>
+            </span>
+          </div>
+
+          <p class="mt-6 text-center text-sm text-slate-400">
             Don't have an account?{' '}
             <Link to="/register" class="text-indigo-400 hover:text-indigo-300 font-semibold underline decoration-indigo-500/50 hover:decoration-indigo-400">
               Create an account
@@ -111,6 +135,8 @@ const Login = () => {
           </p>
         </div>
       </div>
+
+      <ConnectionSettings isOpen={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   );
 };

@@ -5,6 +5,11 @@ import axios from 'axios';
 // If the app is deployed (served via Nginx on port 80/443 or custom domains), we use the relative path '/api'
 // so that requests are routed via the reverse proxy/ingress of the host serving the application.
 const getBaseUrl = () => {
+  const customUrl = localStorage.getItem('custom_api_url');
+  if (customUrl) {
+    return customUrl;
+  }
+
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
@@ -24,9 +29,9 @@ const getBaseUrl = () => {
 const API_BASE_URL = getBaseUrl();
 
 // Detect if we should use the localStorage mock adapter (e.g. running on GitHub Pages)
-const isGitHubPages = window.location.hostname.endsWith('github.io');
-const forceMock = localStorage.getItem('use_mock_api') === 'true';
-const useMock = isGitHubPages || forceMock;
+const isGitHubPages = typeof window !== 'undefined' && window.location && window.location.hostname.endsWith('github.io');
+const useMockSetting = localStorage.getItem('use_mock_api');
+const useMock = useMockSetting !== null ? (useMockSetting === 'true') : isGitHubPages;
 
 if (useMock) {
   console.log('%c[Library OS] Running in Client-Side Mock Database Mode (localStorage)', 'color: #818cf8; font-weight: bold; font-size: 12px;');
@@ -672,5 +677,40 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const isMockEnabled = () => {
+  const isGitHubPages = typeof window !== 'undefined' && window.location && window.location.hostname.endsWith('github.io');
+  const useMockSetting = localStorage.getItem('use_mock_api');
+  return useMockSetting !== null ? (useMockSetting === 'true') : isGitHubPages;
+};
+
+export const setMockEnabled = (enabled) => {
+  localStorage.setItem('use_mock_api', enabled ? 'true' : 'false');
+};
+
+export const getCustomApiUrl = () => {
+  return localStorage.getItem('custom_api_url') || '';
+};
+
+export const setCustomApiUrl = (url) => {
+  if (url) {
+    localStorage.setItem('custom_api_url', url);
+  } else {
+    localStorage.removeItem('custom_api_url');
+  }
+};
+
+export const getDefaultApiUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  if (typeof window !== 'undefined' && window.location) {
+    if (window.location.port === '5173') {
+      return 'http://localhost:8080/api';
+    }
+    return window.location.origin + '/api';
+  }
+  return 'http://localhost:8080/api';
+};
 
 export default api;
