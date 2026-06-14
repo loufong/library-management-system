@@ -91,7 +91,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   class="glass-input w-full pl-10 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-indigo-500/50"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                 />
               </div>
             </div>
