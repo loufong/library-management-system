@@ -80,7 +80,7 @@ const Register = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl focus:ring-2 focus:ring-indigo-500/50"
-                  placeholder="john_doe"
+                  placeholder="Enter your name"
                 />
               </div>
             </div>
@@ -97,7 +97,7 @@ const Register = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl focus:ring-2 focus:ring-indigo-500/50"
-                  placeholder="john@example.com"
+                  placeholder="Enter your email"
                 />
               </div>
             </div>
